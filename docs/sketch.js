@@ -305,6 +305,7 @@ function hwan_selectingImage() {
     textAlign(CENTER, CENTER);
     fill(0);
     text('2전시관은 직접 작품을 설명해보는 공간이에요. \n 그림을 보고 있지 않은 누군가에게 화면에 나타난 그림을 설명해보세요. \n 관람자님의 설명만으로 어떤 그림이 만들어지는지도 확인해보실 수 있답니다!',width/2,198)
+    text('2전시관은 직접 작품을 설명해보는 공간이에요. \n 그림을 보고 있지 않은 누군가에게 화면에 나타난 그림을 설명해보세요. \n 관람자님의 설명만으로 어떤 그림이 만들어지는지도 확인해보실 수 있습니다.',width/2,198)
     imageMode(CENTER);
     image(l_Image1, width / 4, height / 2 + 60, 300, 300); // 첫 번째 이미지
     image(l_Image2, width / 2, height / 2 + 60 , 300, 300); // 두 번째 이미지
@@ -368,6 +369,7 @@ class ImageGeneratorApp {
         tint(255, 255, 255, 255); // 투명도 100% 설정
         imageMode(CENTER);
         textSize(24)
+        text('모든 설명을 입력하지 않아도 괜찮아요. \n 설명은 문장형으로 입력해주세요.', width/2 ,100)
         text('버튼을 클릭한 후에는 잠시 기다려주세요. \n 그림이 생성될 때까지는 약 10초 소요됩니다.',width/2,height-100)
 
         const numInputs = 3;
@@ -375,6 +377,9 @@ class ImageGeneratorApp {
             "그림에선 어떤 풍경이 보이나요? <br> (날씨와 계절은 어떤지, 색은 어떤지 알려주세요)",
             "그림에서 보이는 사물들에는 어떤 것들이 있나요? <br> (사람이 있다면 표정과 자세를, 사물이 있다면 색이나 모양을 알려주세요)",
             "그림은 어떠한 분위기를 가지고 있나요? <br> (그림에서 느껴지는 인상과 분위기를 적어주세요)"
+            "그림에선 어떤 풍경이나 사물이 보이나요? <br> (날씨와 계절은 어떤지, 사물과 사람의 특징을 알려주세요)",
+            "그림에서 어떤 분위기가 느껴지나요? <br> (그림을 보았을 때 받은 인상을 알려주세요)",
+            "시각장애인의 이해를 도울 수 있는 부연설명이 있을까요? <br> (그림을 보고 떠올린 개인적인 추억이나 경험도 좋고, 색과 관련된 사물을 예로 들어보는 것도 좋을 거예요.)"
         ];
 
         for (let i = 0; i < numInputs; i++) {
@@ -389,8 +394,14 @@ class ImageGeneratorApp {
             inputBox.position(windowWidth / 2 + 150, 250 + i * 200);
             inputBox.class('box-style');
             inputBox.size(500);
+            inputBox.input(() => this.updateButtonState()); // 입력 이벤트 추가
 
             this.inputBoxes.push(inputBox);
+            this.inputAllBoxes.push(inputBox);
+
+            if (i < 2) {
+              this.inputBoxes.push(inputBox);
+          }
         }
 
         // Generate Image 버튼
@@ -406,7 +417,23 @@ class ImageGeneratorApp {
         this.generateButton.mousePressed(() => this.generateImage());
 
         image(this.selectedImage, 400, height / 2, 400, 400);
+
+        
     }
+
+    updateButtonState() {
+      // 입력 필드 중 하나라도 값이 있으면 버튼 활성화
+      const hasInput = this.inputBoxes.some((box) => box.value().trim() !== '');
+      if (hasInput) {
+          this.generateButton.removeAttribute('disabled'); // 버튼 활성화
+          this.generateButton.style('background-color', 'white'); // 활성화 배경색
+          this.generateButton.style('cursor', 'pointer'); // 활성화 커서
+      } else {
+          this.generateButton.attribute('disabled', ''); // 버튼 비활성화
+          this.generateButton.style('background-color', 'lightgray'); // 비활성화 배경색
+          this.generateButton.style('cursor', 'not-allowed'); // 비활성화 커서
+      }
+  }
 
     async generateImage() {
         this.generateButton.attribute('disabled', 'true');
@@ -415,6 +442,9 @@ class ImageGeneratorApp {
         const userInputs = this.inputBoxes.map(box => box.value()).join(' ');
         const combinedPrompt = `${this.initialValues} ${userInputs}`;
         user_prompt = userInputs;
+
+        const userAllInputs = this.inputAllBoxes.map(box => box.value()).join(' ');
+        user_prompt = userAllInputs;
 
         try {
             const response = await fetch('http://localhost:3000/generate-image', {
@@ -430,14 +460,23 @@ class ImageGeneratorApp {
                 console.log('Received Image URL:', data.imageUrl);
 
                 const proxiedUrl = `http://localhost:3000/proxy-image?url=${encodeURIComponent(data.imageUrl)}`;
+                
+               
                 loadImage(proxiedUrl, (img) => {
                     imageMode(CENTER)
                     image(img, this.imgX, this.imgY, this.imgW, this.imgH);
                     this.generatedImageLoaded = true; // 이미지 로드 완료
+
+
                 });
 
                 imageUrl = proxiedUrl;
                 this.hideInputsAndButton();
+                fill(255,111,111)
+                rectMode(CENTER) // 로딩 화면
+                rect(this.imgX, this.imgY, this.imgW, this.imgH)
+                fill(0)
+                rectMode(CORNER)
 
                 // Supabase에 저장
                 const saveSuccess = await uploadImageToSupabase(imageUrl, num, user_prompt);
@@ -458,6 +497,7 @@ class ImageGeneratorApp {
 
     hideInputsAndButton() {
         this.inputBoxes.forEach(inputBox => inputBox.hide());
+        this.inputAllBoxes.forEach(inputBox => inputBox.hide());
         this.labels.forEach(label => label.hide());
         this.generateButton.hide();
         background(255);
