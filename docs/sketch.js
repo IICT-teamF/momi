@@ -335,6 +335,7 @@ class ImageGeneratorApp {
         this.generateButton = null;
         this.imageUrl = '';
         this.selectedImage = null;
+        this.inputAllBoxes = [];
 
         // 생성된 이미지의 위치와 크기
         
