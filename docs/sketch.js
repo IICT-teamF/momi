@@ -393,7 +393,6 @@ class ImageGeneratorApp {
             inputBox.size(500);
             inputBox.input(() => this.updateButtonState()); // 입력 이벤트 추가
 
-            this.inputBoxes.push(inputBox);
             this.inputAllBoxes.push(inputBox);
 
             if (i < 2) {
@@ -438,7 +437,6 @@ class ImageGeneratorApp {
 
         const userInputs = this.inputBoxes.map(box => box.value()).join(' ');
         const combinedPrompt = `${this.initialValues} ${userInputs}`;
-        user_prompt = userInputs;
 
         const userAllInputs = this.inputAllBoxes.map(box => box.value()).join(' ');
         user_prompt = userAllInputs;
@@ -493,7 +491,6 @@ class ImageGeneratorApp {
     }
 
     hideInputsAndButton() {
-        this.inputBoxes.forEach(inputBox => inputBox.hide());
         this.inputAllBoxes.forEach(inputBox => inputBox.hide());
         this.labels.forEach(label => label.hide());
         this.generateButton.hide();
@@ -505,7 +502,6 @@ class ImageGeneratorApp {
         image(this.selectedImage, 400, height / 2, 400, 400);
         textSize(24)
         text('생성된 작품을 원본과 천천히 비교해보신 후, 그림을 클릭하시면 다음 화면으로 전환됩니다.',width/2,height-150)
-
     }
 
     section2Draw(){
