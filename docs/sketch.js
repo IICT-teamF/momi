@@ -906,8 +906,8 @@ let case2Viewer = null;
       let scaleFactor9 = min(windowWidth, windowHeight) * 0.7 / max(vdes.width, vdes.height);
       let newWidth9 = vdes.width * scaleFactor9;
       let newHeight9 = vdes.height * scaleFactor9;
-      let xPos9 = (windowWidth - newWidth9) / 2; // 가로 가운데 위치
-      let yPos9 = windowHeight * 2.4 / 10; // 세로 위치 조정
+      let xPos9 = (windowWidth - newWidth9) / 2; // 가로 중앙
+      let yPos9 = windowHeight * 2.4 / 10; // 세로 위치
       image(vdes, xPos9, yPos9, newWidth9, newHeight9);
   
       // vwave 이미지 렌더링
@@ -918,16 +918,17 @@ let case2Viewer = null;
       let yPos10 = (windowHeight - newHeight10) / 2; // 세로 중앙
       image(vwave, xPos10, yPos10, newWidth10, newHeight10);
   
-      // 재생 버튼 위치 및 크기 설정
-      let replayWidth = 240;
-      let replayHeight = 80;
+      // 재생 버튼 크기 및 위치 설정
+      let scaleFactor11 = min(windowWidth, windowHeight) * 0.2 / max(replayImg.width, replayImg.height);
+      let replayWidth = replayImg.width * scaleFactor11;
+      let replayHeight = replayImg.height * scaleFactor11;
       let replayX = width / 2 - replayWidth / 2;
       let replayY = height / 2 + 250;
   
-      // 재생 버튼 이미지 렌더링
+      // 재생 버튼 렌더링
       image(replayImg, replayX, replayY, replayWidth, replayHeight);
   
-      // 버튼에 마우스가 올라가면 강조 효과
+      // 버튼 hover 효과
       if (
           mouseX > replayX && mouseX < replayX + replayWidth &&
           mouseY > replayY && mouseY < replayY + replayHeight
@@ -940,34 +941,15 @@ let case2Viewer = null;
           pop();
       }
   
-      // 나레이션이 종료되었는지 확인
+      // 나레이션 종료 메시지
       if (currentSound && !currentSound.isPlaying() && !narrationFinished) {
           narrationFinished = true;
       }
   
-      // 나레이션 종료 메시지
       if (narrationFinished) {
           textSize(25);
           textAlign(CENTER);
           text("음성 설명이 끝났습니다. 화살표를 눌러 다음 단계로 넘어가세요.", width / 2, height / 2 + 200);
-      }
-  
-      // 클릭 이벤트 처리
-      if (mouseIsPressed) {
-          if (
-              mouseX > replayX && mouseX < replayX + replayWidth &&
-              mouseY > replayY && mouseY < replayY + replayHeight
-          ) {
-              // 나레이션 재생
-              if (!currentSound || !currentSound.isPlaying()) {
-                  if (currentSound) currentSound.stop(); // 이전 사운드 정지
-                  if (selectedOption >= 0 && selectedOption < narrationSounds.length) {
-                      currentSound = narrationSounds[selectedOption];
-                      currentSound.play();
-                      narrationFinished = false;
-                  }
-              }
-          }
       }
   }
   
@@ -1407,21 +1389,23 @@ let case2Viewer = null;
       }
     }
   
-    // Stage : 나레이션 재생 버튼 클릭
-    if (stage === 6) {
-      let replayWidth = 240; // 가로 크기
-      let replayHeight = 80; // 세로 크기
-      let replayX = width / 2 - replayWidth / 2; // 버튼 중앙 정렬 X 위치
-      let replayY = height / 2 + 250; // 버튼 Y 위치
-  
-      if (
-        mouseX > replayX && mouseX < replayX + replayWidth &&
-        mouseY > replayY && mouseY < replayY + replayHeight
-      ) {
-        replayNarration(); // 나레이션 재생
-        return;
-      }
-    }
+   // Stage : 나레이션 재생 버튼 클릭
+if (stage === 6) {
+  let scaleFactor11 = min(windowWidth, windowHeight) * 0.14 / max(replayImg.width, replayImg.height);
+  let replayWidth = replayImg.width * scaleFactor11;
+  let replayHeight = replayImg.height * scaleFactor11;
+  let replayX = width / 2 - replayWidth / 2;
+  let replayY = height / 2 + 250;
+
+  if (
+      mouseX > replayX && mouseX < replayX + replayWidth &&
+      mouseY > replayY && mouseY < replayY + replayHeight
+  ) {
+      replayNarration(); // 나레이션 재생
+      return;
+  }
+}
+
   
     // Stage : 퀴즈 이미지 선택
     if (stage === 8) {
