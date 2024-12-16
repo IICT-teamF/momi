@@ -43,6 +43,12 @@ let quizStage = "quizscreen"; // 퀴즈 단계
 let selectedQuizOption = -1;
 let correctAnswerImages = []; // 정답 이미지 배열
 let resetSection1Img; // "처음으로" 버튼에 사용할 이미지
+let rectangle115;
+let txt3;
+let txt4;
+let txt6;
+let txt7;
+let txt10;
 
 // 버튼 및 이미지 크기
 let resetImgWidth = 100;
@@ -125,6 +131,12 @@ function preload() {
   correctAnswerImages[2] = loadImage('assets/actual3.svg'); // 정답 이미지 3
   // 새로운 "처음으로" 버튼 이미지 로드
   resetSection1Img = loadImage("assets/Fsection1.svg");
+  rectangle115 = loadImage('assets/rectangle 115.svg');
+  txt3 = loadImage('assets/txt3.svg');
+  txt4 = loadImage('assets/txt4.svg');
+  txt6 = loadImage('assets/txt6.svg');
+  txt7 = loadImage('assets/txt7.svg');
+  txt10 = loadImage('assets/txt10.svg');
 
   // 지윤: 이미지 로드
   Fimg1 = loadImage('assets/house.svg');
@@ -305,9 +317,11 @@ if (stage === 0 || stage === 1 || stage === 2) {
         }
         break;
       default:
+        push();
         fill(255, 0, 0); // 오류 발생 시 빨간색 텍스트
         textAlign(CENTER, CENTER);
         text("오류 발생. 다시 시도해주세요.", width / 2, height / 2);
+        pop();
     }
   }
 
@@ -957,23 +971,25 @@ let case2Viewer = null;
   
   // 지우 화면 처리 함수들
   function drawIntroScreen() {
-    textAlign(CENTER, CENTER); // 텍스트 중앙 정렬
-    // 텍스트 크기 설정
-    textSize(40);
-    // 첫 번째 텍스트
-    text("이제 당신은 잠시 시각 장애인의 세상 속으로 들어갑니다.", width / 2, height / 2 - 70);
-    // 두 번째 텍스트
-    text("그들은 미술관에서 어떤 경험과 마주하게 될까요?", width / 2, height / 2 - 20);
-    // 텍스트 크기 변경
-    textSize(30);
-    // 세 번째 텍스트
-    text("화살표를 눌러 시작하세요.", width / 2, height / 2 + 50);}
+    push(); // 현재 스타일 설정 저장
+    imageMode(CENTER); // 이미지 중앙 정렬
+  
+    // txt3 이미지를 화면 중앙에 배치하고 크기 조정 (90% 크기)
+    image(txt3, width / 2, height / 2, txt3.width * 0.8, txt3.height * 0.8);
+  
+    pop(); // 이전 스타일 설정 복원
+  }
+  
+  
     
     function drawArtworkSelection() {
-      textAlign(CENTER, CENTER);
-      textSize(24);
-      fill(0);
-      text("세 가지 버전의 그림 중 하나를 선택하세요.", width / 2, height * 0.25);
+      push(); // 현재 스타일 설정 저장
+      imageMode(CENTER); // 이미지 중앙 정렬
+    
+      // txt4 이미지를 텍스트 위치에 배치하고 크기를 줄임
+      image(txt4, width / 2, height * 0.25, txt4.width * 0.7, txt4.height * 0.7);
+    
+      pop(); // 이전 스타일 설정 복원
     
       let gap = width * 0.05; // 이미지 간격
       let totalWidth = artworkImages.reduce((acc, img) => acc + img.width, 0) + (artworkImages.length - 1) * gap; // 전체 너비 계산
@@ -1058,25 +1074,25 @@ let case2Viewer = null;
   }
   
   
-  function drawQuestionScreen() {textAlign(CENTER, CENTER); // 텍스트 중앙 정렬
-    textSize(35); // 텍스트 크기 설정
+  function drawQuestionScreen() {
+    push(); // 현재 스타일 설정 저장
+    imageMode(CENTER); // 이미지 중앙 정렬
   
-    let lineHeight = 50; // 각 줄 사이의 간격
+    // txt6 이미지를 화면 중앙에 배치하고 크기 조정 (90% 크기)
+    image(txt6, width / 2, height / 2, txt6.width * 0.8, txt6.height * 0.8);
   
-    // 첫 번째 텍스트
-    text("색이나 빛, 사물을 한 번도 본 적 없는 선천적 전맹 시각장애인이라면,", width / 2, height / 2 - lineHeight);
-  
-    // 두 번째 텍스트
-    text("어떤 설명이 추가되는 것이 좋을까요? 잠시 그들의 입장에서 상상해주세요.", width / 2, height / 2 + lineHeight);
+    pop(); // 이전 스타일 설정 복원
   }
+  
   
   function drawQuizScreen() {
     let startIndex = selectedOption * 4; // 선택된 옵션에 따른 퀴즈 이미지 인덱스 시작점
   
     // 질문 텍스트
-    textAlign(CENTER, CENTER);
-    textSize(30);
-    text("나레이션이 설명한 작품은 무엇일까요?", width / 2, height * 0.2);
+  push(); // 스타일 보호
+  imageMode(CENTER); // 이미지 중앙 정렬
+  image(txt7, width / 2, height * 0.2, txt7.width * 0.55, txt7.height * 0.55); // 크기 조정 (80%)
+  pop(); // 스타일 복원
   
     // 이미지 크기와 간격
     let imgWidth = 300;
@@ -1217,6 +1233,7 @@ function drawFinalScreen() {
 
   // "처음으로" 버튼 텍스트
   push();
+  fill(0);
   textSize(30);
   text("처음으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
   pop();
@@ -1237,6 +1254,7 @@ function drawFinalScreen() {
 
   // "다음 전시로" 버튼 텍스트
   push();
+  fill(0);
   textSize(30);
   text("다음 전시로", nextButtonX + buttonWidth / 2, buttonY + textYOffset);
   pop();
