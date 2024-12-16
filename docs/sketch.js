@@ -34,7 +34,6 @@ let korstars, clouds;
 let stage = 0; // 현재 단계
 let selectedOption = -1; // 사용자가 선택한 옵션
 let artworkImages = []; // 옵션별 작품 이미지
-let actualArtworks = []; // 실제 작품 이미지
 let quizImages = []; // 퀴즈 이미지 배열
 let narrationSounds = []; // 나레이션 사운드 배열
 let currentSound; // 현재 재생 중인 사운드
@@ -47,9 +46,10 @@ let txt3;
 let txt4;
 let txt6;
 let txt7;
-let txt10;
 let correctAnswerImage1, correctAnswerImage2, correctAnswerImage3;
 let correctAnswerImages = []; // 정답 이미지 배열
+let txt8_1_ans, txt8_1_incor, txt8_2_ans, txt8_2_incor, txt8_3_ans, txt8_3_incor, txt10;
+let isCorrect = false; // 기본값은 틀림으로 설정
 
 // 버튼 및 이미지 크기
 let resetImgWidth = 100;
@@ -111,7 +111,6 @@ function preload() {
 
     // 지우: 이미지 및 사운드 로드
   for (let i = 0; i < 3; i++) {
-    actualArtworks[i] = loadImage(`assets/actual${i + 1}.png`);
     narrationSounds[i] = loadSound(`assets/narration${i + 1}.mp3`);
   }
   for (let quiz = 1; quiz <= 3; quiz++) {
@@ -127,9 +126,10 @@ function preload() {
   section1Img = loadImage("assets/section1.svg");
   replayImg = loadImage("assets/replay.svg");
   // 이미지 로드
-  correctAnswerImage1 = loadImage('assets/actual1.svg'); // Claude Monet
-  correctAnswerImage2 = loadImage('assets/actual2.svg'); // Edward Hopper
-  correctAnswerImage3 = loadImage('assets/actual3.svg'); // Marc Chagall
+  correctAnswerImage1 = loadImage('assets/actual1.png'); // Claude Monet
+  correctAnswerImage2 = loadImage('assets/actual2.png'); // Edward Hopper
+  correctAnswerImage3 = loadImage('assets/actual3.png'); // Marc Chagall
+  correctAnswerImages = [correctAnswerImage1, correctAnswerImage2, correctAnswerImage3];
 
   // 배열에 추가
   correctAnswerImages.push(correctAnswerImage1);
@@ -145,7 +145,14 @@ function preload() {
   txt4 = loadImage('assets/txt4.svg');
   txt6 = loadImage('assets/txt6.svg');
   txt7 = loadImage('assets/txt7.svg');
+  txt8_1_ans = loadImage('assets/txt8-1 ans.svg');
+  txt8_1_incor = loadImage('assets/txt8-1 incor.svg');
+  txt8_2_ans = loadImage('assets/txt8-2 ans.svg');
+  txt8_2_incor = loadImage('assets/txt8-2 incor.svg');
+  txt8_3_ans = loadImage('assets/txt8-3 ans.svg');
+  txt8_3_incor = loadImage('assets/txt8-3 incor.svg');
   txt10 = loadImage('assets/txt10.svg');
+
 
   // 지윤: 이미지 로드
   Fimg1 = loadImage('assets/house.svg');
@@ -1140,65 +1147,84 @@ function drawAnswerScreen() {
   let imageHeight = 300;
   let spacing = 50; // 그림 간격
 
-  let imageXCorrect = (width - imageWidth * 2 - spacing) / 2; // 정답 그림의 x 좌표
-  let imageXSelected = imageXCorrect + imageWidth + spacing; // 선택한 그림의 x 좌표
-  let imageY = height * 0.25; // 두 그림의 y 좌표
+  // 전체 캔버스의 중심을 기준으로 계산
+  let centerX = width / 2;
+  let centerY = height / 2;
 
-  // 정답 여부 확인
-  let isCorrect = selectedQuizOption === selectedOption;
+  // 두 그림의 위치를 간격을 포함해 계산
+  let imageXLeft = centerX - imageWidth - spacing / 2; // 왼쪽 그림 x 좌표
+  let imageXRight = centerX + spacing / 2; // 오른쪽 그림 x 좌표
+  let imageY = centerY - imageHeight / 2 - 70; // 그림 y 좌표 (70px 위로 올림)
 
-  // 배열 범위 확인
-  if (selectedOption < 0 || selectedOption >= correctAnswerImages.length) {
-      console.error("selectedOption 값이 잘못되었습니다:", selectedOption);
-      return;
+  // 텍스트 이미지 렌더링 위치 (그림 아래 여유 공간 추가)
+  let textImageX = centerX;
+  let textImageY = imageY + imageHeight + spacing / 2 + 50; // 그림 아래 50px 간격 추가
+
+  // 정답 이미지와 텍스트 이미지 설정
+  let correctImage = null; // 왼쪽 정답 그림
+  let textImage = null; // 아래 텍스트 이미지
+
+  // 정답 결정
+  let isCorrect = false; // 초기화
+  if (selectedOption === 0) {
+    correctImage = correctAnswerImage1;
+    isCorrect = (selectedQuizOption === 0); // 선택값 비교
+    textImage = isCorrect ? txt8_1_ans : txt8_1_incor;
+  } else if (selectedOption === 1) {
+    correctImage = correctAnswerImage2;
+    isCorrect = (selectedQuizOption === 1); // 선택값 비교
+    textImage = isCorrect ? txt8_2_ans : txt8_2_incor;
+  } else if (selectedOption === 2) {
+    correctImage = correctAnswerImage3;
+    isCorrect = (selectedQuizOption === 2); // 선택값 비교
+    textImage = isCorrect ? txt8_3_ans : txt8_3_incor;
   }
 
-  // 정답 그림 렌더링
-  image(correctAnswerImages[selectedOption], imageXCorrect, imageY, imageWidth, imageHeight);
+  // 왼쪽: 정답 그림 렌더링
+  push(); // 스타일 상태 저장
+  if (correctImage) {
+    imageMode(CORNER); // 이미지를 기준점에 맞게 배치
+    image(correctImage, imageXLeft, imageY, imageWidth, imageHeight);
+  } else {
+    console.error("Correct image not found for selectedOption:", selectedOption);
+  }
+  pop(); // 스타일 상태 복구
 
-  // 선택한 그림 렌더링 (오른쪽)
+  // 오른쪽: 사용자가 선택한 그림 렌더링
+  push(); // 스타일 상태 저장
   let startIndex = selectedOption * 4; // 선택된 옵션의 퀴즈 이미지 시작점 계산
   let selectedImageIndex = startIndex + selectedQuizOption;
 
   if (selectedImageIndex >= 0 && selectedImageIndex < quizImages.length) {
-      image(quizImages[selectedImageIndex], imageXSelected, imageY, imageWidth, imageHeight);
+    imageMode(CORNER);
+    image(quizImages[selectedImageIndex], imageXRight, imageY, imageWidth, imageHeight);
   } else {
-      console.error("올바른 quizImages 인덱스를 찾을 수 없습니다.");
+    console.error("Invalid selectedQuizOption value or quizImages out of range.");
   }
+  pop(); // 스타일 상태 복구
 
-  // 정답 여부에 따른 메시지 출력
-  textSize(30);
-  textAlign(CENTER, CENTER);
-
-  if (isCorrect) {
-      text("정답입니다! 나레이션이 설명한 작품과 일치합니다.", width / 2, imageY + imageHeight + 80);
-      text("이 작품은 시각장애인 전시를 경험하며 상상한 그림입니다.", width / 2, imageY + imageHeight + 120);
+  // 텍스트 이미지 렌더링 (크기 축소 및 간격 확보)
+  push(); // 텍스트 이미지 스타일 분리
+  if (textImage) {
+    imageMode(CENTER);
+    image(textImage, textImageX, textImageY, textImage.width * 0.5, textImage.height * 0.5); // 텍스트 크기를 50%로 축소
   } else {
-      text("오답입니다. 선택한 작품은 나레이션이 설명한 작품이 아닙니다.", width / 2, imageY + imageHeight + 80);
-      text("다시 상상해보며 작품을 맞춰보세요.", width / 2, imageY + imageHeight + 120);
-
-      // 선택한 오답에 따라 다른 메시지 추가
-      let incorrectMessage;
-      if (selectedQuizOption === 1) {
-          incorrectMessage = "이 그림은 Edward Hopper의 작품입니다.";
-      } else if (selectedQuizOption === 2) {
-          incorrectMessage = "이 그림은 Marc Chagall의 작품입니다.";
-      } else if (selectedQuizOption === 0) {
-          incorrectMessage = "이 그림은 Claude Monet의 작품입니다.";
-      } else {
-          incorrectMessage = "다른 작가의 작품입니다.";
-      }
-      text(incorrectMessage, width / 2, imageY + imageHeight + 160);
+    console.error("Text image not found for selectedOption and correctness.");
   }
+  pop(); // 텍스트 스타일 복구
 }
+
 
 
 function drawFinalScreen() {
   textAlign(CENTER, CENTER); // 텍스트 중앙 정렬
 
   // 화면 상단 텍스트
+  push();
+  fill(0);
   textSize(40); // 텍스트 크기 크게 설정
   text("이제 함께 미술관을 관람해보시겠습니까?", width / 2, height * 0.25);
+  pop();
 
   // 버튼 공통 크기와 위치
   let buttonWidth = 150; // 버튼 너비
