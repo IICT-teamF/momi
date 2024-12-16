@@ -843,7 +843,7 @@ let case2Viewer = null;
     textAlign(CENTER, CENTER);
     text('Click the Button', width / 2, height / 10);
   
-    // 2초 후에 FintroImage와 Fsection1ButtonImage 표시
+    // 2초 후에 FintroImage와 FButtonImage 표시
     if (FshowImages) {
       // Fintro 이미지 크기 0.8배로 조정
       let FintroWidth = FintroImage.width * 0.8;
@@ -1041,15 +1041,18 @@ let case2Viewer = null;
   function drawAnswerScreen() {
     let imageWidth = 500;
     let imageHeight = 300;
-    let imageX = (width - imageWidth) / 2;
-    let imageY = height * 0.25;
+    let spacing = 50; // 그림 간격
+
+    let imageXCorrect = (width - imageWidth * 2 - spacing) / 2; // 정답 그림의 x 좌표
+    let imageXSelected = imageXCorrect + imageWidth + spacing; // 선택한 그림의 x 좌표
+    let imageY = height * 0.25; // 두 그림의 y 좌표
 
     // 정답 여부 확인
     let isCorrect = selectedQuizOption === selectedOption;
 
     if (isCorrect) {
         // 정답 화면 렌더링
-        image(actualArtworks[selectedOption], imageX, imageY, imageWidth, imageHeight);
+        image(actualArtworks[selectedOption], (width - imageWidth) / 2, imageY, imageWidth, imageHeight);
 
         // 정답 메시지 및 작품 정보 출력
         let artist, title;
@@ -1078,8 +1081,11 @@ let case2Viewer = null;
         text("정답입니다! 나레이션이 설명한 작품과 일치합니다.", width / 2, imageY + imageHeight + 80);
         text("이 작품은 시각장애인 전시를 경험하며 상상한 그림입니다.", width / 2, imageY + imageHeight + 120);
     } else {
-        // 오답 화면 렌더링
-        image(quizImages[selectedOption * 4 + selectedQuizOption], imageX, imageY, imageWidth, imageHeight);
+        // 정답 그림 렌더링 (왼쪽)
+        image(actualArtworks[selectedOption], imageXCorrect, imageY, imageWidth, imageHeight);
+
+        // 선택한 그림 렌더링 (오른쪽)
+        image(quizImages[selectedOption * 4 + selectedQuizOption], imageXSelected, imageY, imageWidth, imageHeight);
 
         // 오답 메시지 출력
         textSize(30);
@@ -1131,7 +1137,7 @@ let case2Viewer = null;
   
     // "처음으로" 버튼 텍스트
     textSize(30);
-    text("처음으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
+    text("다시 1전시관으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
   
     // "다음 전시로" 버튼
     let nextButtonX = width / 2 + buttonGap / 2; // X 위치 (오른쪽으로 이동)
@@ -1238,13 +1244,17 @@ let case2Viewer = null;
   }
   
   function drawSection1Button() {
-    let buttonWidth = 100; // 버튼 너비
-    let buttonHeight = 50; // 버튼 높이
-    let margin = 20; // 화면 가장자리와의 여백
+    // 요청한 크기대로 버튼 크기 설정
+    let scaleFactor1 = min(windowWidth, windowHeight) * 0.15 / max(section1Img.width, section1Img.height);
+    let buttonWidth = section1Img.width * scaleFactor1; // 버튼 너비
+    let buttonHeight = section1Img.height * scaleFactor1; // 버튼 높이
+    let marginX = windowWidth / 80; // 좌측 상단 여백 (가로)
+    let marginY = windowHeight / 80; // 좌측 상단 여백 (세로)
   
     // 좌측 상단에 버튼 표시
-    image(section1Img, margin, margin, buttonWidth, buttonHeight);
-  }
+    image(section1Img, marginX, marginY, buttonWidth, buttonHeight);
+}
+
   
   // 나레이션 다시 재생 함수
   function replayNarration() {
@@ -1368,7 +1378,7 @@ let case2Viewer = null;
         ) {
           console.log("Reset button clicked. Restarting.");
           resetState(); // 상태 초기화
-          stage = 0; // 초기 화면으로 이동
+          stage = 4; // 초기 화면으로 이동
           return;
         }
   
