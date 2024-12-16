@@ -964,45 +964,69 @@ let case2Viewer = null;
     }
 
   }
-  function drawAnswerScreen() {let imageWidth = 500;
-    let imageHeight = 300; 
-    let imageX = (width - imageWidth) / 2; 
-    let imageY = height * 0.25; 
-  
-    // 실제 정답 그림 출력
-    image(actualArtworks[selectedOption], imageX, imageY, imageWidth, imageHeight);
-  
-    // 작가와 작품 제목 설정
-    let artist, title;
-    if (selectedOption === 0) {
-      artist = "Claude Monet";
-      title = "The Flood";
-    } else if (selectedOption === 1) {
-      artist = "Edward Hopper";
-      title = "Nighthawks";
-    } else if (selectedOption === 2) {
-      artist = "Marc Chagall";
-      title = "Above the Head";
+
+  function drawAnswerScreen() {
+    let imageWidth = 500;
+    let imageHeight = 300;
+    let imageX = (width - imageWidth) / 2;
+    let imageY = height * 0.25;
+
+    // 정답 여부 확인
+    let isCorrect = selectedQuizOption === selectedOption;
+
+    if (isCorrect) {
+        // 정답 화면 렌더링
+        image(actualArtworks[selectedOption], imageX, imageY, imageWidth, imageHeight);
+
+        // 정답 메시지 및 작품 정보 출력
+        let artist, title;
+        if (selectedOption === 0) {
+            artist = "Claude Monet";
+            title = "The Flood";
+        } else if (selectedOption === 1) {
+            artist = "Edward Hopper";
+            title = "Nighthawks";
+        } else if (selectedOption === 2) {
+            artist = "Marc Chagall";
+            title = "Above the Head";
+        }
+
+        if (artist && title) {
+            textAlign(CENTER, CENTER);
+            textSize(30);
+            fill(0);
+            stroke(204, 153, 255);
+            strokeWeight(2);
+            text(`${artist}, <${title}>`, width / 2, imageY + imageHeight + 40);
+        }
+
+        textSize(30);
+        textAlign(CENTER, CENTER);
+        text("정답입니다! 나레이션이 설명한 작품과 일치합니다.", width / 2, imageY + imageHeight + 80);
+        text("이 작품은 시각장애인 전시를 경험하며 상상한 그림입니다.", width / 2, imageY + imageHeight + 120);
+    } else {
+        // 오답 화면 렌더링
+        image(quizImages[selectedOption * 4 + selectedQuizOption], imageX, imageY, imageWidth, imageHeight);
+
+        // 오답 메시지 출력
+        textSize(30);
+        textAlign(CENTER, CENTER);
+        text("오답입니다. 선택한 작품은 나레이션이 설명한 작품이 아닙니다.", width / 2, imageY + imageHeight + 80);
+        text("다시 상상해보며 작품을 맞춰보세요.", width / 2, imageY + imageHeight + 120);
+
+        // 선택한 오답에 따라 다른 메시지 추가 (옵션)
+        let incorrectMessage;
+        if (selectedQuizOption === 1) {
+            incorrectMessage = "이 그림은 Edward Hopper의 작품입니다.";
+        } else if (selectedQuizOption === 2) {
+            incorrectMessage = "이 그림은 Marc Chagall의 작품입니다.";
+        } else {
+            incorrectMessage = "다른 작가의 작품입니다.";
+        }
+        text(incorrectMessage, width / 2, imageY + imageHeight + 160);
     }
-  
-    // 작가와 작품 제목 출력
-    if (artist && title) {
-      push(); // 외곽선 효과를 다른 요소에 영향을 주지 않도록 제한
-      textAlign(CENTER, CENTER);
-      textSize(30); // 기존 크기 유지
-      fill(0);
-      stroke(204, 153, 255); // 연보라색 외곽선
-      strokeWeight(2);
-      text(`${artist}, <${title}>`, width / 2, imageY + imageHeight + 40); // 그림 아래 첫 줄에 추가
-      pop();
-    }
-  
-    // 기존 설명 텍스트 출력
-    textSize(30); // 기존 크기 유지
-    textAlign(CENTER, CENTER);
-    text("위의 그림이 나레이션이 설명한 작품이었습니다.", width / 2, imageY + imageHeight + 80);
-    text("그림을 상상하기 어렵지는 않았나요? 시각장애인이 경험하는 전시를 잠시 체험해보았습니다.", width / 2, imageY + imageHeight + 120);
-  }
+}
+
   
   function drawFinalScreen() {
     textAlign(CENTER, CENTER); // 텍스트 중앙 정렬
@@ -1108,7 +1132,6 @@ let case2Viewer = null;
       pop();
     }
   }
-  
   
   function nextStage() {
     if (currentSound && currentSound.isPlaying()) {
