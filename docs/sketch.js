@@ -1154,7 +1154,10 @@ function drawAnswerScreen() {
 
   // 텍스트 이미지 렌더링 위치 (그림 아래 여유 공간 추가)
   let textImageX = centerX;
-  let textImageY = imageY + imageHeight + spacing / 2 + 50; // 그림 아래 50px 간격 추가
+  let textImageY = imageY + imageHeight + spacing + 80; // 그림 아래 간격을 더 넉넉하게 확보 (80px 추가)
+
+  // 텍스트 이미지 크기 조정
+  let textImageScale = 0.7; // 텍스트 이미지를 70% 크기로 조정
 
   // 정답 이미지와 텍스트 이미지 설정
   let correctImage = null; // 왼쪽 정답 그림
@@ -1199,17 +1202,22 @@ function drawAnswerScreen() {
   }
   pop(); // 스타일 상태 복구
 
-  // 텍스트 이미지 렌더링 (크기 축소 및 간격 확보)
+  // 텍스트 이미지 렌더링 (크기 확대 및 간격 확보)
   push(); // 텍스트 이미지 스타일 분리
   if (textImage) {
     imageMode(CENTER);
-    image(textImage, textImageX, textImageY, textImage.width * 0.5, textImage.height * 0.5); // 텍스트 크기를 50%로 축소
+    image(
+      textImage,
+      textImageX,
+      textImageY,
+      textImage.width * textImageScale,
+      textImage.height * textImageScale
+    ); // 텍스트 크기를 조정
   } else {
     console.error("Text image not found for selectedOption and correctness.");
   }
   pop(); // 텍스트 스타일 복구
 }
-
 
 
 function drawFinalScreen() {
