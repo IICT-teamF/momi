@@ -413,12 +413,14 @@ class ImageGeneratorApp {
         this.generateButton = createButton('내 설명으로 만든<br>작품 보기');
         this.generateButton.position(windowWidth * 8 / 10 + 50, windowHeight * 8 / 9 - 20);
         this.generateButton.class('box-style')
-        // 버튼 모양 변경
-        this.generateButton.style('border', '2px solid black'); // 테두리 제거
-        this.generateButton.style('background-color', 'white'); // 배경색
+
+        // 버튼 모양 초기 상태 - 비활성화
+        this.generateButton.attribute('disabled', 'true'); // 'true'로 설정
+        this.generateButton.style('background-color', 'lightgray'); // 비활성화 배경색
+        this.generateButton.style('cursor', 'not-allowed'); // 비활성화 커서
+        this.generateButton.style('border', '2px solid black'); // 테두리 설정
         this.generateButton.style('border-radius', '50px'); // 모서리 둥글게
         this.generateButton.style('padding', '10px 20px'); // 버튼 크기 조정
-        this.generateButton.style('cursor', 'pointer'); // 마우스 포인터 설정
         this.generateButton.mousePressed(() => this.generateImage());
 
         image(this.selectedImage, 400, height / 2, 400, 400);
