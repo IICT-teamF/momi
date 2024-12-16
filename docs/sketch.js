@@ -41,6 +41,7 @@ let currentSound; // 현재 재생 중인 사운드
 let narrationFinished = false; // 나레이션 종료 여부
 let quizStage = "quizscreen"; // 퀴즈 단계
 let selectedQuizOption = -1;
+let correctAnswerImages = []; // 정답 이미지 배열
 
 // 버튼 및 이미지 크기
 let resetImgWidth = 100;
@@ -81,8 +82,6 @@ function preload() {
     previous2 = loadImage('section2/previous2.svg');  // 다섯 번째 이미지 로드 (앞으로 가기))
     picframe = loadImage('asset/blank.svg');  // 아홉 번째 이미지 로드 (필요 없을 듯)
 
-    
-
 
 
 
@@ -103,6 +102,10 @@ function preload() {
   backgroundImg = loadImage("assets/background.png");
   section1Img = loadImage("assets/section1.svg");
   replayImg = loadImage("assets/replay.svg");
+  // 정답 이미지 로드
+  correctAnswerImages[0] = loadImage('assets/actual1.svg'); // 정답 이미지 1
+  correctAnswerImages[1] = loadImage('assets/actual2.svg'); // 정답 이미지 2
+  correctAnswerImages[2] = loadImage('assets/actual3.svg'); // 정답 이미지 3
 
   // 지윤: 이미지 로드
   Fimg1 = loadImage('assets/house.svg');
@@ -121,6 +124,9 @@ function preload() {
    //새로운 이미지
    korstars = loadImage('assets/korstars.svg');
    clouds = loadImage('assets/clouds.svg');
+
+   //svg 액자 추가
+   
 
 }
 
@@ -1043,7 +1049,6 @@ let case2Viewer = null;
         pop();
       }
     }
-
   }
 
   function drawAnswerScreen() {
@@ -1060,7 +1065,7 @@ let case2Viewer = null;
 
     if (isCorrect) {
         // 정답 화면 렌더링
-        image(actualArtworks[selectedOption], (width - imageWidth) / 2, imageY, imageWidth, imageHeight);
+        image(correctAnswerImages[selectedOption], (width - imageWidth) / 2, imageY, imageWidth, imageHeight);
 
         // 정답 메시지 및 작품 정보 출력
         let artist, title;
@@ -1090,10 +1095,20 @@ let case2Viewer = null;
         text("이 작품은 시각장애인 전시를 경험하며 상상한 그림입니다.", width / 2, imageY + imageHeight + 120);
     } else {
         // 정답 그림 렌더링 (왼쪽)
-        image(actualArtworks[selectedOption], imageXCorrect, imageY, imageWidth, imageHeight);
+        image(correctAnswerImages[selectedOption], imageXCorrect, imageY, imageWidth, imageHeight);
 
         // 선택한 그림 렌더링 (오른쪽)
-        image(quizImages[selectedOption * 4 + selectedQuizOption], imageXSelected, imageY, imageWidth, imageHeight);
+        let startIndex = selectedOption * 4; // 선택된 옵션의 퀴즈 이미지 시작점 계산
+        let selectedImageIndex = startIndex + selectedQuizOption; // 선택된 퀴즈 이미지의 실제 인덱스
+
+        if (selectedImageIndex >= 0 && selectedImageIndex < quizImages.length) {
+            image(quizImages[selectedImageIndex], imageXSelected, imageY, imageWidth, imageHeight);
+        } else {
+            textAlign(CENTER, CENTER);
+            textSize(20);
+            fill(255, 0, 0);
+            text("선택한 이미지가 없습니다.", imageXSelected + imageWidth / 2, imageY + imageHeight / 2);
+        }
 
         // 오답 메시지 출력
         textSize(30);
@@ -1114,7 +1129,8 @@ let case2Viewer = null;
     }
 }
 
-  
+
+
   function drawFinalScreen() {
     textAlign(CENTER, CENTER); // 텍스트 중앙 정렬
   
@@ -1142,7 +1158,7 @@ let case2Viewer = null;
       rect(resetButtonX, buttonY, buttonWidth, buttonHeight);
       pop();
     }
-  
+  f
     // "처음으로" 버튼 텍스트
     textSize(30);
     text("다시 1전시관으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
