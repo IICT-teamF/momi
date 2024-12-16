@@ -41,6 +41,8 @@ let currentSound; // 현재 재생 중인 사운드
 let narrationFinished = false; // 나레이션 종료 여부
 let quizStage = "quizscreen"; // 퀴즈 단계
 let selectedQuizOption = -1;
+let correctAnswerImages = []; // 정답 이미지 배열
+let resetSection1Img; // "처음으로" 버튼에 사용할 이미지
 
 // 버튼 및 이미지 크기
 let resetImgWidth = 100;
@@ -117,6 +119,12 @@ function preload() {
   backgroundImg = loadImage("assets/background.png");
   section1Img = loadImage("assets/section1.svg");
   replayImg = loadImage("assets/replay.svg");
+  // 정답 이미지 로드
+  correctAnswerImages[0] = loadImage('assets/actual1.svg'); // 정답 이미지 1
+  correctAnswerImages[1] = loadImage('assets/actual2.svg'); // 정답 이미지 2
+  correctAnswerImages[2] = loadImage('assets/actual3.svg'); // 정답 이미지 3
+  // 새로운 "처음으로" 버튼 이미지 로드
+  resetSection1Img = loadImage("assets/section1.svg");
 
   // 지윤: 이미지 로드
   Fimg1 = loadImage('assets/house.svg');
@@ -135,6 +143,9 @@ function preload() {
    //새로운 이미지
    korstars = loadImage('assets/korstars.svg');
    clouds = loadImage('assets/clouds.svg');
+
+   //svg 액자 추가
+   
 
 }
 
@@ -1096,7 +1107,6 @@ let case2Viewer = null;
         pop();
       }
     }
-
   }
 
   function drawAnswerScreen() {
@@ -1113,7 +1123,7 @@ let case2Viewer = null;
 
     if (isCorrect) {
         // 정답 화면 렌더링
-        image(actualArtworks[selectedOption], (width - imageWidth) / 2, imageY, imageWidth, imageHeight);
+        image(correctAnswerImages[selectedOption], (width - imageWidth) / 2, imageY, imageWidth, imageHeight);
 
         // 정답 메시지 및 작품 정보 출력
         let artist, title;
@@ -1143,10 +1153,20 @@ let case2Viewer = null;
         text("이 작품은 시각장애인 전시를 경험하며 상상한 그림입니다.", width / 2, imageY + imageHeight + 120);
     } else {
         // 정답 그림 렌더링 (왼쪽)
-        image(actualArtworks[selectedOption], imageXCorrect, imageY, imageWidth, imageHeight);
+        image(correctAnswerImages[selectedOption], imageXCorrect, imageY, imageWidth, imageHeight);
 
         // 선택한 그림 렌더링 (오른쪽)
-        image(quizImages[selectedOption * 4 + selectedQuizOption], imageXSelected, imageY, imageWidth, imageHeight);
+        let startIndex = selectedOption * 4; // 선택된 옵션의 퀴즈 이미지 시작점 계산
+        let selectedImageIndex = startIndex + selectedQuizOption; // 선택된 퀴즈 이미지의 실제 인덱스
+
+        if (selectedImageIndex >= 0 && selectedImageIndex < quizImages.length) {
+            image(quizImages[selectedImageIndex], imageXSelected, imageY, imageWidth, imageHeight);
+        } else {
+            textAlign(CENTER, CENTER);
+            textSize(20);
+            fill(255, 0, 0);
+            text("선택한 이미지가 없습니다.", imageXSelected + imageWidth / 2, imageY + imageHeight / 2);
+        }
 
         // 오답 메시지 출력
         textSize(30);
@@ -1167,57 +1187,62 @@ let case2Viewer = null;
     }
 }
 
-  
-  function drawFinalScreen() {
-    textAlign(CENTER, CENTER); // 텍스트 중앙 정렬
-  
-    // 화면 상단 텍스트
-    textSize(40); // 텍스트 크기 크게 설정
-    text("이제 함께 미술관을 관람해보시겠습니까?", width / 2, height * 0.25);
-  
-    // 버튼 공통 크기와 위치
-    let buttonWidth = 150; // 버튼 너비
-    let buttonHeight = 70; // 버튼 높이
-    let buttonY = height * 0.4; // 버튼 Y 위치
-    let textYOffset = buttonHeight + 20; // 텍스트와 버튼 간 간격
-    let buttonGap = 180; // 버튼 간격 증가
-  
-    // "처음으로" 버튼
-    let resetButtonX = width / 2 - buttonWidth - buttonGap / 2; // X 위치 (왼쪽으로 이동)
-    image(resetImg, resetButtonX, buttonY, buttonWidth, buttonHeight);
-  
-    // "처음으로" 버튼 강조 효과
-    if (isMouseOver(resetButtonX, buttonY, buttonWidth, buttonHeight)) {
-      push();
-      stroke(255); // 흰색 강조
-      strokeWeight(3);
-      noFill();
-      rect(resetButtonX, buttonY, buttonWidth, buttonHeight);
-      pop();
-    }
-  
-    // "처음으로" 버튼 텍스트
-    textSize(30);
-    text("다시 1전시관으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
-  
-    // "다음 전시로" 버튼
-    let nextButtonX = width / 2 + buttonGap / 2; // X 위치 (오른쪽으로 이동)
-    image(nextImg, nextButtonX, buttonY, buttonWidth, buttonHeight);
-  
-    // "다음 전시로" 버튼 강조 효과
-    if (isMouseOver(nextButtonX, buttonY, buttonWidth, buttonHeight)) {
-      push();
-      stroke(255); // 흰색 강조
-      strokeWeight(3);
-      noFill();
-      rect(nextButtonX, buttonY, buttonWidth, buttonHeight);
-      pop();
-    }
-  
-    // "다음 전시로" 버튼 텍스트
-    textSize(30);
-    text("다음 전시로", nextButtonX + buttonWidth / 2, buttonY + textYOffset);
+function drawFinalScreen() {
+  textAlign(CENTER, CENTER); // 텍스트 중앙 정렬
+
+  // 화면 상단 텍스트
+  textSize(40); // 텍스트 크기 크게 설정
+  text("이제 함께 미술관을 관람해보시겠습니까?", width / 2, height * 0.25);
+
+  // 버튼 공통 크기와 위치
+  let buttonWidth = 150; // 버튼 너비
+  let buttonHeight = 70; // 버튼 높이
+  let buttonY = height * 0.4; // 버튼 Y 위치
+  let textYOffset = buttonHeight + 20; // 텍스트와 버튼 간 간격
+  let buttonGap = 180; // 버튼 간격 증가
+
+  // "처음으로" 버튼
+  let resetButtonX = width / 2 - buttonWidth - buttonGap / 2; // X 위치 (왼쪽으로 이동)
+  image(resetSection1Img, resetButtonX, buttonY, buttonWidth, buttonHeight); // 새로운 이미지 사용
+
+  // "처음으로" 버튼 강조 효과
+  if (isMouseOver(resetButtonX, buttonY, buttonWidth, buttonHeight)) {
+    push();
+    stroke(255); // 흰색 강조
+    strokeWeight(3);
+    noFill();
+    rect(resetButtonX, buttonY, buttonWidth, buttonHeight);
+    pop();
   }
+
+  // "처음으로" 버튼 텍스트
+  push();
+  textSize(30);
+  text("처음으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
+  pop();
+
+  // "다음 전시로" 버튼
+  let nextButtonX = width / 2 + buttonGap / 2; // X 위치 (오른쪽으로 이동)
+  image(nextImg, nextButtonX, buttonY, buttonWidth, buttonHeight);
+
+  // "다음 전시로" 버튼 강조 효과
+  if (isMouseOver(nextButtonX, buttonY, buttonWidth, buttonHeight)) {
+    push();
+    stroke(255); // 흰색 강조
+    strokeWeight(3);
+    noFill();
+    rect(nextButtonX, buttonY, buttonWidth, buttonHeight);
+    pop();
+  }
+
+  // "다음 전시로" 버튼 텍스트
+  push();
+  textSize(30);
+  text("다음 전시로", nextButtonX + buttonWidth / 2, buttonY + textYOffset);
+  pop();
+}
+
+
   // 마우스 위치 확인 함수
   function isMouseOver(x, y, w, h) {
     return mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h;
@@ -1282,26 +1307,7 @@ let case2Viewer = null;
   }
   
   function resetState() {
-    selectedOption = -1; // 선택 옵션 초기화
-    narrationFinished = false; // 나레이션 상태 초기화
-    if (currentSound && currentSound.isPlaying()) {
-      currentSound.stop(); // 재생 중인 사운드 중지
-    }
-    currentSound = null; // 사운드 초기화
-  
-    // 지윤 화면 상태 초기화
-    FnextScreen = false;
-    FmiddleScreen = false;
-    FnextScreen2 = false;
-    FshowImages = false;
-  
-    // Fimg1, Fimg2, Fimg3 위치 초기화
-    Fimg3Y = windowHeight / 5.9;
-    Fimg1X = (windowWidth - Fimg1.width) / 2;
-    Fimg1Y = (windowHeight - Fimg1.height) / 2 + windowHeight / 10 + windowHeight / 20;
-  
-    // stage 초기화
-    stage = 0; // 초기 단계로 설정
+    location.reload();
   }
   
   function drawSection1Button() {
