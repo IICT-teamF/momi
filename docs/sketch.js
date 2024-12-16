@@ -1267,26 +1267,7 @@ function drawFinalScreen() {
   }
   
   function resetState() {
-    selectedOption = -1; // 선택 옵션 초기화
-    narrationFinished = false; // 나레이션 상태 초기화
-    if (currentSound && currentSound.isPlaying()) {
-      currentSound.stop(); // 재생 중인 사운드 중지
-    }
-    currentSound = null; // 사운드 초기화
-  
-    // 지윤 화면 상태 초기화
-    FnextScreen = false;
-    FmiddleScreen = false;
-    FnextScreen2 = false;
-    FshowImages = false;
-  
-    // Fimg1, Fimg2, Fimg3 위치 초기화
-    Fimg3Y = windowHeight / 5.9;
-    Fimg1X = (windowWidth - Fimg1.width) / 2;
-    Fimg1Y = (windowHeight - Fimg1.height) / 2 + windowHeight / 10 + windowHeight / 20;
-  
-    // stage 초기화
-    stage = 0; // 초기 단계로 설정
+    location.reload();
   }
   
   function drawSection1Button() {
