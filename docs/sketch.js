@@ -270,27 +270,35 @@ if (stage === 0 || stage === 1 || stage === 2) {
   if (stage >= 4) {
     switch (stage) {
       case 4:
+        fill(0);
         drawIntroScreen(); // 나레이션 소개 화면
         break;
       case 5:
+        fill(0);
         drawArtworkSelection(); // 그림 선택 화면
         break;
       case 6:
+        fill(0);
         drawNarrationScreen(); // 나레이션 화면
         break;
       case 7:
+        fill(0);
         drawQuestionScreen(); // 질문 화면
         break;
       case 8:
+        fill(0);
         drawQuizScreen(); // 퀴즈 화면
         break;
       case 9:
+        fill(0);
         drawAnswerScreen(); // 정답 화면
         break;
       case 10:
+        fill(0);
         drawFinalScreen(); // 마지막 화면
         break;
       case 11:
+        fill(0);
         textSize(25);
         if (!isHwanInitialized) {
             hwan_selectingImage();
@@ -1507,7 +1515,7 @@ function drawFinalScreen() {
           mouseY < resetButtonY + buttonHeight
         ) {
           console.log("Reset button clicked. Restarting.");
-          resetState(); // 상태 초기화
+          //resetState(); // 상태 초기화
           stage = 4; // 초기 화면으로 이동
           return;
         }
