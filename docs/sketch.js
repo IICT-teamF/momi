@@ -79,7 +79,9 @@ function preload() {
     reset2 = loadImage('section2/reset2.svg');  // 두 번째 이미지 로드 (리셋 버튼)
     next2 = loadImage('section2/next2.svg');  // 네 번째 이미지 로드 (뒤로 가기)
     previous2 = loadImage('section2/previous2.svg');  // 다섯 번째 이미지 로드 (앞으로 가기))
-    picframe = loadImage('section2/pictureframe2.svg');  // 아홉 번째 이미지 로드 (필요 없을 듯)
+    picframe = loadImage('asset/blank.svg');  // 아홉 번째 이미지 로드 (필요 없을 듯)
+
+    
 
 
 
@@ -363,9 +365,11 @@ class ImageGeneratorApp {
     setup(selectedImage) {
         this.selectedImage = selectedImage;
         background(255,255,255)
-        background(255, 194, 180, 128);
-
+       //background(255, 194, 180, 128);
         imageMode(CORNER)
+        tint(255, 81.6); // Fimg4의 투명도 적용
+        image(Fimg4, 0, 0, width, height);
+        tint(255,255,255)
         // section2 로고
         this.section2Draw()
 
@@ -409,12 +413,14 @@ class ImageGeneratorApp {
         this.generateButton = createButton('내 설명으로 만든<br>작품 보기');
         this.generateButton.position(windowWidth * 8 / 10 + 50, windowHeight * 8 / 9 - 20);
         this.generateButton.class('box-style')
-        // 버튼 모양 변경
-        this.generateButton.style('border', '2px solid black'); // 테두리 제거
-        this.generateButton.style('background-color', 'white'); // 배경색
+
+        // 버튼 모양 초기 상태 - 비활성화
+        this.generateButton.attribute('disabled', 'true'); // 'true'로 설정
+        this.generateButton.style('background-color', 'lightgray'); // 비활성화 배경색
+        this.generateButton.style('cursor', 'not-allowed'); // 비활성화 커서
+        this.generateButton.style('border', '2px solid black'); // 테두리 설정
         this.generateButton.style('border-radius', '50px'); // 모서리 둥글게
         this.generateButton.style('padding', '10px 20px'); // 버튼 크기 조정
-        this.generateButton.style('cursor', 'pointer'); // 마우스 포인터 설정
         this.generateButton.mousePressed(() => this.generateImage());
 
         image(this.selectedImage, 400, height / 2, 400, 400);
@@ -466,6 +472,7 @@ class ImageGeneratorApp {
                     imageMode(CENTER)
                     image(img, this.imgX, this.imgY, this.imgW, this.imgH);
                     this.generatedImageLoaded = true; // 이미지 로드 완료
+                    image(picframe,this.imgX, this.imgY, this.imgW, this.imgH)
 
 
                 });
@@ -475,6 +482,7 @@ class ImageGeneratorApp {
                 fill(255,111,111)
                 rectMode(CENTER) // 로딩 화면
                 rect(this.imgX, this.imgY, this.imgW, this.imgH)
+                image(picframe,this.imgX, this.imgY, this.imgW, this.imgH)
                 fill(0)
                 rectMode(CORNER)
 
@@ -501,6 +509,10 @@ class ImageGeneratorApp {
         this.generateButton.hide();
         background(255);
         background(255, 194, 180, 128);  // 배경색 설정
+        imageMode(CORNER)
+        tint(255, 81.6); // Fimg4의 투명도 적용
+        image(Fimg4, 0, 0, width, height);
+        tint(255,255,255)
         this.section2Draw()
         imageMode(CENTER);
         tint(255, 255, 255, 255);
@@ -629,6 +641,7 @@ class Case2Viewer {
 
             loadImage(imagePath, (img) => {
                 image(img, width / 2, height / 2, 400, 400); // 현재 이미지 표시
+                image(picframe, width / 2, height / 2, 400, 400)
             });
 
             // 현재 프롬프트 표시
@@ -643,6 +656,7 @@ class Case2Viewer {
             text("No images found for this category.", width / 2, height / 2);
         }
         this.showArrows();
+        this.drawArrowButton();
     }
 
     clearContentArea() {
@@ -650,6 +664,9 @@ class Case2Viewer {
         background(255)
         background(255, 194, 180, 128); // 배경색
         imageMode(CORNER)
+        tint(255, 81.6); // Fimg4의 투명도 적용
+        image(Fimg4, 0, 0, width, height);
+        tint(255,255,255)
         let scaleFactor1 = min(windowWidth, windowHeight) * 0.15 / max(section2.width, section2.height);
         let newWidth1 = section2.width * scaleFactor1;
         let newHeight1 = section2.height * scaleFactor1;
@@ -682,6 +699,29 @@ class Case2Viewer {
             this.currentIndex = (this.currentIndex + 1) % this.images.length;
             this.displayCurrentImage();
         }
+    }
+
+    drawArrowButton() {
+      let arrowX = width - 150;
+      let arrowY = height - 150;
+      image(arrowImg, arrowX, arrowY, 100, 100);
+      
+      if (mouseX > arrowX && mouseX < arrowX + 100 && mouseY > arrowY && mouseY < arrowY + 100) {
+        push();
+        stroke(255, 255, 255); // 흰색 외곽선
+        strokeWeight(4);
+        noFill();
+        rect(arrowX, arrowY, 100, 100); // 버튼 외곽선
+        pop();
+      }
+      image(arrowImg, arrowX, arrowY, 100, 100);
+    }
+
+    handleArrowButton() {
+      if (mouseX > width - 150 && mouseX < width - 50 && mouseY > height - 150 && mouseY < height - 50) {
+        console.log("Arrow button clicked. Moving to next stage.");
+        stage++;
+      }
     }
 }
 
@@ -1267,6 +1307,7 @@ let case2Viewer = null;
 
     } else if (stage >= 11 &&  yun_case === 2 && case2Viewer) {
         case2Viewer.handleArrowClick();
+        case2Viewer.handleArrowButton();
     } 
 
     if (
