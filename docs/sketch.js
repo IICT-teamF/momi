@@ -656,6 +656,7 @@ class Case2Viewer {
             text("No images found for this category.", width / 2, height / 2);
         }
         this.showArrows();
+        this.drawArrowButton();
     }
 
     clearContentArea() {
@@ -698,6 +699,29 @@ class Case2Viewer {
             this.currentIndex = (this.currentIndex + 1) % this.images.length;
             this.displayCurrentImage();
         }
+    }
+
+    drawArrowButton() {
+      let arrowX = width - 150;
+      let arrowY = height - 150;
+      image(arrowImg, arrowX, arrowY, 100, 100);
+      
+      if (mouseX > arrowX && mouseX < arrowX + 100 && mouseY > arrowY && mouseY < arrowY + 100) {
+        push();
+        stroke(255, 255, 255); // 흰색 외곽선
+        strokeWeight(4);
+        noFill();
+        rect(arrowX, arrowY, 100, 100); // 버튼 외곽선
+        pop();
+      }
+      image(arrowImg, arrowX, arrowY, 100, 100);
+    }
+
+    handleArrowButton() {
+      if (mouseX > width - 150 && mouseX < width - 50 && mouseY > height - 150 && mouseY < height - 50) {
+        console.log("Arrow button clicked. Moving to next stage.");
+        stage++;
+      }
     }
 }
 
@@ -1301,6 +1325,7 @@ let case2Viewer = null;
 
     } else if (stage >= 11 &&  yun_case === 2 && case2Viewer) {
         case2Viewer.handleArrowClick();
+        case2Viewer.handleArrowButton();
     } 
 
     if (
