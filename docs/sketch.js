@@ -9,7 +9,6 @@ let yun_case = 1;
 let project_font;
 let previousCase = 1; // 이전 yun_case 값 저장
 let section2, reset2, framebox, next2, previous2, picframe, chatting2, promp2;  // 이미지를 저장할 변수 선언
-
 let isHwanInitialized = false
 
 // 지윤
@@ -58,10 +57,13 @@ let arrowImg, resetImg, nextImg, customFont;
 let backgroundImg, section1Img, replayImg; // 배경 및 버튼 이미지
 
 //더 알아보기 부분
+
 let more, eye, pro, newImage1, newImage2, link;  // 이미지를 저장할 변수 선언
 let isInfo1 = false;  // info1 화면 여부를 확인하는 변수
 let isHoveringPrevious2 = false;  // previous2 이미지 위에 마우스가 있는지 확인하는 변수
 let isHoveringLink = false;  // link 이미지 위에 마우스가 있는지 확인하는 변수
+let isHoveringEye = false;  // eye 이미지 위에 마우스가 있는지 확인하는 변수
+
 
 // Proxy URL 선언
 const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; // 공개 프록시 URL
@@ -173,6 +175,7 @@ function preload() {
    clouds = loadImage('assets/clouds.svg');
 
    //svg 액자 추가
+   txt10 = loadImage('section2/txt10.svg')
    
 
 }
@@ -277,27 +280,35 @@ if (stage === 0 || stage === 1 || stage === 2) {
   if (stage >= 4) {
     switch (stage) {
       case 4:
+        fill(0);
         drawIntroScreen(); // 나레이션 소개 화면
         break;
       case 5:
+        fill(0);
         drawArtworkSelection(); // 그림 선택 화면
         break;
       case 6:
+        fill(0);
         drawNarrationScreen(); // 나레이션 화면
         break;
       case 7:
+        fill(0);
         drawQuestionScreen(); // 질문 화면
         break;
       case 8:
+        fill(0);
         drawQuizScreen(); // 퀴즈 화면
         break;
       case 9:
+        fill(0);
         drawAnswerScreen(); // 정답 화면
         break;
       case 10:
+        fill(0);
         drawFinalScreen(); // 마지막 화면
         break;
       case 11:
+        fill(0);
         textSize(25);
         if (!isHwanInitialized) {
             hwan_selectingImage();
@@ -368,17 +379,13 @@ function hwan_selectingImage() {
     let newHeight3 = framebox.height * scaleFactor3;
     let xPos3 = windowWidth / 2 - newWidth3 / 2;
     let yPos3 = windowHeight / 7;
-    image(framebox, xPos3, yPos3, newWidth3, newHeight3);
-
-    textFont(project_font);
-    textAlign(CENTER, CENTER);
-    fill(0);
-    text('2전시관은 직접 작품을 설명해보는 공간이에요. \n 그림을 보고 있지 않은 누군가에게 화면에 나타난 그림을 설명해보세요. \n 관람자님의 설명만으로 어떤 그림이 만들어지는지도 확인해보실 수 있습니다.',width/2,198)
+    image(txt10, xPos3, yPos3, newWidth3, newHeight3);
     imageMode(CENTER);
+    fill(0);
     image(l_Image1, width / 4, height / 2 + 60, 300, 300); // 첫 번째 이미지
     image(l_Image2, width / 2, height / 2 + 60 , 300, 300); // 두 번째 이미지
     image(l_Image3, (3 * width) / 4, height / 2 + 60 , 300, 300); // 세 번째 이미지
-    text('설명하고 싶은 그림을 선택해주세요!',width/2,height-150)
+    text('설명하고 싶은 그림을 선택해주세요!',width/2,height-130)
 }
 
 function choi_image() {
@@ -399,7 +406,8 @@ class ImageGeneratorApp {
         this.inputBoxes = [];
         this.initialValues = '';
         this.labels = [];
-        this.bubble = l_bubble;
+        this.promp2 = promp2
+        this.chatting2 = chatting2
         this.generateButton = null;
         this.imageUrl = '';
         this.selectedImage = null;
@@ -426,46 +434,34 @@ class ImageGeneratorApp {
 
     setup(selectedImage) {
         this.selectedImage = selectedImage;
-        background(255,255,255)
-       //background(255, 194, 180, 128);
-        imageMode(CORNER)
-        tint(255, 81.6); // Fimg4의 투명도 적용
-        image(Fimg4, 0, 0, width, height);
-        tint(255,255,255)
+        background(255,255,255);
+        background(255, 194, 180, 128);
+        imageMode(CORNER);
         // section2 로고
-        this.section2Draw()
+        this.section2Draw();
 
-        imageMode(CENTER)
+        imageMode(CENTER);
         
         tint(255, 255, 255, 255); // 투명도 100% 설정
         imageMode(CENTER);
-        textSize(24)
-        text('모든 설명을 입력하지 않아도 괜찮아요. \n 설명은 문장형으로 입력해주세요.', width/2 ,100)
-        text('버튼을 클릭한 후에는 잠시 기다려주세요. \n 그림이 생성될 때까지는 약 10초 소요됩니다.',width/2,height-100)
+        image(chatting2, windowWidth / 2 + 350, windowHeight/ 2)
+        image(promp2, windowWidth / 2 + 350, windowHeight/ 2);  // 열한 번째 이미지 로드
+        textSize(20)
+        text('모든 설명을 입력하지 않아도 괜찮습니다. 설명은 문장형으로 입력해주세요.', width/2 ,80)
+        text('버튼을 클릭한 후에는 잠시 기다려주세요. 그림이 생성될 때까지는 약 10초 소요됩니다.',width/2,height-100)
+    
 
         const numInputs = 3;
-        const labelsText = [
-            "그림에선 어떤 풍경이나 사물이 보이나요? <br> (날씨와 계절은 어떤지, 사물과 사람의 특징을 알려주세요)",
-            "그림에서 어떤 분위기가 느껴지나요? <br> (그림을 보았을 때 받은 인상을 알려주세요)",
-            "시각장애인의 이해를 도울 수 있는 부연설명이 있을까요? <br> (그림을 보고 떠올린 개인적인 추억이나 경험도 좋고, 색과 관련된 사물을 예로 들어보는 것도 좋을 거예요.)"
-        ];
 
         for (let i = 0; i < numInputs; i++) {
-            const label = createDiv(labelsText[i]);
-            label.position(windowWidth / 2 + 150, 180 + i * 200);
-            label.class('box-style');
-            this.bubble.resize(570, 250);
-            image(this.bubble, windowWidth / 2 + 350, 188 + i * 200);
-            this.labels.push(label);
 
             const inputBox = createInput();
-            inputBox.position(windowWidth / 2 + 150, 250 + i * 200);
+            inputBox.position(windowWidth / 2 + 120, 250 + i * 200);
             inputBox.class('box-style');
             inputBox.size(500);
             inputBox.input(() => this.updateButtonState()); // 입력 이벤트 추가
 
             this.inputAllBoxes.push(inputBox);
-
             if (i < 2) {
               this.inputBoxes.push(inputBox);
           }
@@ -567,7 +563,7 @@ class ImageGeneratorApp {
 
     hideInputsAndButton() {
         this.inputAllBoxes.forEach(inputBox => inputBox.hide());
-        this.labels.forEach(label => label.hide());
+        //this.labels.forEach(label => label.hide());
         this.generateButton.hide();
         background(255);
         background(255, 194, 180, 128);  // 배경색 설정
@@ -1406,55 +1402,46 @@ function drawFinalScreen() {
         }
 
     } else if (stage == 12) {
-      // more 이미지를 클릭하면 메인 화면으로 돌아가기
-      let scaleFactorMore = min(windowWidth, windowHeight) * 0.15 / max(more.width, more.height);
-      let newWidthMore = more.width * scaleFactorMore;
-      let newHeightMore = more.height * scaleFactorMore;
-      let xPosMore = windowWidth / 80;
-      let yPosMore = windowHeight / 80;
-      if (mouseX > xPosMore && mouseX < xPosMore + newWidthMore && mouseY > yPosMore && mouseY < yPosMore + newHeightMore) {
-        isInfo1 = false;  // 메인 화면으로 돌아가기
-      }
-
-      // previous2 이미지를 클릭하면 메인 화면으로 돌아가기
-      let scaleFactor5 = min(windowWidth, windowHeight) * 0.13 / max(previous2.width, previous2.height);
-      let newWidth5 = previous2.width * scaleFactor5;
-      let newHeight5 = previous2.height * scaleFactor5;
-      let xPos5 = windowWidth / 20;
-      let yPos5 = windowHeight * 8.5 / 10;
-      if (mouseX > xPos5 && mouseX < xPos5 + newWidth5 && mouseY > yPos5 && mouseY < yPos5 + newHeight5) {
-        isInfo1 = false;  // 메인 화면으로 돌아가기
-      }
-
-      // link 이미지 클릭 영역
-      let scaleFactorLink = min(windowWidth, windowHeight) * 0.4 / max(link.width, link.height);
-      let newWidthLink = link.width * scaleFactorLink;
-      let newHeightLink = link.height * scaleFactorLink;
-      let xPosLink = windowWidth - newWidthLink - 20;
-      let yPosLink = windowHeight - newHeightLink - 20;
-      if (mouseX > xPosLink && mouseX < xPosLink + newWidthLink && mouseY > yPosLink && mouseY < yPosLink + newHeightLink) {
-        window.open('http://www.kbuwel.or.kr/Blind/What', '_blank');  // URL 열기
-      }
-
-      // eye 이미지 클릭 영역
-      let scaleFactor6 = min(windowWidth, windowHeight) * 0.4 / max(eye.width, eye.height);
-      let newWidth6 = eye.width * scaleFactor6;
-      let newHeight6 = eye.height * scaleFactor6;
-      let xPos6 = windowWidth / 2 - (newWidth6 + 50);
-      let yPos6 = windowHeight * 3 / 4;
-      if (mouseX > xPos6 && mouseX < xPos6 + newWidth6 && mouseY > yPos6 && mouseY < yPos6 + newHeight6) {
-        isInfo1 = true;  // info1 화면으로 전환
-      }
-
-      // pro 이미지 클릭 영역
-      let scaleFactor7 = min(windowWidth, windowHeight) * 0.4 / max(pro.width, pro.height);
-      let newWidth7 = pro.width * scaleFactor7;
-      let newHeight7 = pro.height * scaleFactor7;
-      let xPos7 = windowWidth / 2 + 50;
-      let yPos7 = windowHeight * 3 / 4;
-      if (mouseX > xPos7 && mouseX < xPos7 + newWidth7 && mouseY > yPos7 && mouseY < yPos7 + newHeight7) {
-        // no action needed since info2 screen is removed
-      }
+      // 클릭된 이미지 영역 확인
+    // more 이미지를 클릭하면 메인 화면으로 돌아가기
+    let scaleFactorMore = min(windowWidth, windowHeight) * 0.15 / max(more.width, more.height);
+    let newWidthMore = more.width * scaleFactorMore;
+    let newHeightMore = more.height * scaleFactorMore;
+    let xPosMore = windowWidth / 80;
+    let yPosMore = windowHeight / 80;
+    if (mouseX > xPosMore && mouseX < xPosMore + newWidthMore && mouseY > yPosMore && mouseY < yPosMore + newHeightMore) {
+      isInfo1 = false;  // 메인 화면으로 돌아가기
+    }
+  
+    // previous2 이미지를 클릭하면 메인 화면으로 돌아가기
+    let scaleFactor5 = min(windowWidth, windowHeight) * 0.13 / max(previous2.width, previous2.height);
+    let newWidth5 = previous2.width * scaleFactor5;
+    let newHeight5 = previous2.height * scaleFactor5;
+    let xPos5 = windowWidth / 20;
+    let yPos5 = windowHeight * 8.5 / 10;
+    if (mouseX > xPos5 && mouseX < xPos5 + newWidth5 && mouseY > yPos5 && mouseY < yPos5 + newHeight5) {
+      isInfo1 = false;  // 메인 화면으로 돌아가기
+    }
+  
+    // link 이미지 클릭 영역
+    let scaleFactorLink = min(windowWidth, windowHeight) * 0.4 / max(link.width, link.height);
+    let newWidthLink = link.width * scaleFactorLink;
+    let newHeightLink = link.height * scaleFactorLink;
+    let xPosLink = windowWidth - newWidthLink - 20;
+    let yPosLink = windowHeight - newHeightLink - 20;
+    if (mouseX > xPosLink && mouseX < xPosLink + newWidthLink && mouseY > yPosLink && mouseY < yPosLink + newHeightLink) {
+      window.open('http://www.kbuwel.or.kr/Blind/What', '_blank');  // URL 열기
+    }
+  
+    // eye 이미지 클릭 영역
+    let scaleFactor6 = min(windowWidth, windowHeight) * 0.4 / max(eye.width, eye.height);
+    let newWidth6 = eye.width * scaleFactor6;
+    let newHeight6 = eye.height * scaleFactor6;
+    let xPos6 = windowWidth / 2 + 40;  // 간격을 50px로 넓힘
+    let yPos6 = windowHeight * 2.1 / 4;  // 세로 3/4 위치에 배치
+    if (mouseX > xPos6 && mouseX < xPos6 + newWidth6 && mouseY > yPos6 && mouseY < yPos6 + newHeight6) {
+      isInfo1 = true;  // info1 화면으로 전환
+     }
     }
 
     if (
@@ -1533,7 +1520,7 @@ function drawFinalScreen() {
           mouseY < resetButtonY + buttonHeight
         ) {
           console.log("Reset button clicked. Restarting.");
-          resetState(); // 상태 초기화
+          //resetState(); // 상태 초기화
           stage = 4; // 초기 화면으로 이동
           return;
         }
@@ -1632,24 +1619,27 @@ if (stage === 6) {
     resetState(); // 초기 상태로 리셋
     return;
   }
-  }
+}
 
-  //마무리 화면
   function drawLastScreen() {
-    imageMode(CORNER);
     background(255, 194, 180);  // 배경색 설정
   
     // more 버튼
     let scaleFactor1 = min(windowWidth, windowHeight) * 0.15 / max(more.width, more.height);
     let newWidth1 = more.width * scaleFactor1;
     let newHeight1 = more.height * scaleFactor1;
+    imageMode(CORNER)
     image(more, windowWidth / 80, windowHeight / 80, newWidth1, newHeight1);
   
     // reset2
-    let scaleFactor2 = min(windowWidth, windowHeight) * 0.15 / max(reset2.width, reset2.height);
-    let newWidth2 = reset2.width * scaleFactor2;
-    let newHeight2 = reset2.height * scaleFactor2;
-    image(reset2, windowWidth * 9 / 10, windowHeight / 200, newWidth2, newHeight2);
+      let scaleFactor2 = min(windowWidth, windowHeight) * 0.15 / max(reset2.width, reset2.height);  // 기존 크기보다 두 배로 키움
+      let newWidth2 = reset2.width * scaleFactor2;
+      let newHeight2 = reset2.height * scaleFactor2;
+      let xPos2 = windowWidth / 2 - (newWidth2 + 120);  // 간격을 50px로 넓힘
+      let yPos2 = windowHeight * 2.05 / 4;  // 세로 3/4 위치에 배치
+      imageMode(CORNER)
+      image(reset2, xPos2, yPos2, newWidth2, newHeight2);
+    
   
     // framebox
     let scaleFactor3 = min(windowWidth, windowHeight) * 1.1 / max(framebox.width, framebox.height);
@@ -1659,12 +1649,23 @@ if (stage === 6) {
     let yPos3 = windowHeight / 7;
     image(framebox, xPos3, yPos3, newWidth3, newHeight3);
   
+  
     // eye (크기를 2배로 키우고, 세로 3/4 위치에 배치, 가운데 기준으로 왼쪽에 배치)
     let scaleFactor6 = min(windowWidth, windowHeight) * 0.4 / max(eye.width, eye.height);  // 기존 크기보다 두 배로 키움
     let newWidth6 = eye.width * scaleFactor6;
     let newHeight6 = eye.height * scaleFactor6;
-    let xPos6 = windowWidth / 2 - (newWidth6 + 50);  // 간격을 50px로 넓힘
-    let yPos6 = windowHeight * 3 / 4;  // 세로 3/4 위치에 배치
+    let xPos6 = windowWidth / 2 + 40;  // 간격을 50px로 넓힘
+    let yPos6 = windowHeight * 2.1 / 4;  // 세로 3/4 위치에 배치
+    
+    // 마우스가 eye 이미지 위에 있을 때 stroke 색상 흰색으로 변경
+    if (isHoveringEye) {
+      stroke(255);  // 흰색 테두리
+      strokeWeight(3);
+      noFill();
+      rect(xPos6, yPos6, newWidth6, newHeight6);  // 테두리 그리기
+    } else {
+      noStroke();  // 테두리 초기화
+    }
     image(eye, xPos6, yPos6, newWidth6, newHeight6);
   }
   
@@ -1687,14 +1688,15 @@ if (stage === 6) {
       rect(xPos5, yPos5, newWidth5, newHeight5);  // 테두리 그리기
     }
     noStroke();  // 테두리 초기화
+    imageMode(CORNER)
     image(previous2, xPos5, yPos5, newWidth5, newHeight5);
   
     // link 이미지 추가 (우하단에 배치, 마우스 호버 시 테두리 추가)
-    let scaleFactorLink = min(windowWidth, windowHeight) * 0.4 / max(link.width, link.height);  // 적당한 크기로 조정
+    let scaleFactorLink = min(windowWidth, windowHeight) * 0.25 / max(link.width, link.height);  // 적당한 크기로 조정
     let newWidthLink = link.width * scaleFactorLink;
     let newHeightLink = link.height * scaleFactorLink;
     let xPosLink = windowWidth - newWidthLink - 20;  // 우하단에 20px 여유를 두고 배치
-    let yPosLink = windowHeight - newHeightLink - 20;  // 우하단에 20px 여유를 두고 배치
+    let yPosLink = windowHeight - newHeightLink - 43;  // 우하단에 20px 여유를 두고 배치
   
     // 마우스가 link 위에 있을 경우 테두리 파란색
     if (isHoveringLink) {
@@ -1712,11 +1714,6 @@ if (stage === 6) {
     let newHeight1 = more.height * scaleFactor1;
     image(more, windowWidth / 80, windowHeight / 80, newWidth1, newHeight1);
   
-    let scaleFactor2 = min(windowWidth, windowHeight) * 0.15 / max(reset2.width, reset2.height);
-    let newWidth2 = reset2.width * scaleFactor2;
-    let newHeight2 = reset2.height * scaleFactor2;
-    image(reset2, windowWidth * 9 / 10, windowHeight / 200, newWidth2, newHeight2);
-  
     // 새로운 이미지들 추가 (category와 definition 이미지를 오른쪽으로 이동)
     let scaleFactorNew1 = min(windowWidth, windowHeight) * 1.5 / max(newImage1.width, newImage1.height);
     let newWidthNew1 = newImage1.width * scaleFactorNew1;
@@ -1730,24 +1727,36 @@ if (stage === 6) {
   }
 
   // 마우스 이동 이벤트 처리
-function mouseMoved() {
-  let scaleFactor5 = min(windowWidth, windowHeight) * 0.13 / max(previous2.width, previous2.height);
-  let newWidth5 = previous2.width * scaleFactor5;
-  let newHeight5 = previous2.height * scaleFactor5;
-  let xPos5 = windowWidth / 20;
-  let yPos5 = windowHeight * 8.5 / 10;
-
-  // 마우스가 previous2 이미지 위에 있는지 확인
-  isHoveringPrevious2 =
-    mouseX > xPos5 && mouseX < xPos5 + newWidth5 && mouseY > yPos5 && mouseY < yPos5 + newHeight5;
-
-  // link 이미지 위에 있는지 확인
-  let scaleFactorLink = min(windowWidth, windowHeight) * 0.4 / max(link.width, link.height);
-  let newWidthLink = link.width * scaleFactorLink;
-  let newHeightLink = link.height * scaleFactorLink;
-  let xPosLink = windowWidth - newWidthLink - 20;
-  let yPosLink = windowHeight - newHeightLink - 20;
-
-  isHoveringLink =
-    mouseX > xPosLink && mouseX < xPosLink + newWidthLink && mouseY > yPosLink && mouseY < yPosLink + newHeightLink;
-}
+  function mouseMoved() {
+    let scaleFactor5 = min(windowWidth, windowHeight) * 0.13 / max(previous2.width, previous2.height);
+    let newWidth5 = previous2.width * scaleFactor5;
+    let newHeight5 = previous2.height * scaleFactor5;
+    let xPos5 = windowWidth / 20;
+    let yPos5 = windowHeight * 8.5 / 10;
+  
+    // 마우스가 previous2 이미지 위에 있는지 확인
+    isHoveringPrevious2 =
+      mouseX > xPos5 && mouseX < xPos5 + newWidth5 && mouseY > yPos5 && mouseY < yPos5 + newHeight5;
+  
+    // link 이미지 위에 있는지 확인
+    let scaleFactorLink = min(windowWidth, windowHeight) * 0.4 / max(link.width, link.height);
+    let newWidthLink = link.width * scaleFactorLink;
+    let newHeightLink = link.height * scaleFactorLink;
+    let xPosLink = windowWidth - newWidthLink - 20;
+    let yPosLink = windowHeight - newHeightLink - 20;
+  
+    isHoveringLink =
+      mouseX > xPosLink && mouseX < xPosLink + newWidthLink && mouseY > yPosLink && mouseY < yPosLink + newHeightLink;
+  
+    // eye 이미지 위에 있는지 확인
+    let scaleFactor6 = min(windowWidth, windowHeight) * 0.4 / max(eye.width, eye.height);
+    let newWidth6 = eye.width * scaleFactor6;
+    let newHeight6 = eye.height * scaleFactor6;
+    let xPos6 = windowWidth / 2 + 40;
+    let yPos6 = windowHeight * 2.1 / 4;
+  
+    isHoveringEye =
+      mouseX > xPos6 && mouseX < xPos6 + newWidth6 && mouseY > yPos6 && mouseY < yPos6 + newHeight6;
+  }
+  
+  
