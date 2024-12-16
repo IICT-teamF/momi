@@ -79,7 +79,9 @@ function preload() {
     reset2 = loadImage('section2/reset2.svg');  // 두 번째 이미지 로드 (리셋 버튼)
     next2 = loadImage('section2/next2.svg');  // 네 번째 이미지 로드 (뒤로 가기)
     previous2 = loadImage('section2/previous2.svg');  // 다섯 번째 이미지 로드 (앞으로 가기))
-    picframe = loadImage('section2/pictureframe2.svg');  // 아홉 번째 이미지 로드 (필요 없을 듯)
+    picframe = loadImage('asset/blank.svg');  // 아홉 번째 이미지 로드 (필요 없을 듯)
+
+    
 
 
 
@@ -363,9 +365,11 @@ class ImageGeneratorApp {
     setup(selectedImage) {
         this.selectedImage = selectedImage;
         background(255,255,255)
-        background(255, 194, 180, 128);
-
+       //background(255, 194, 180, 128);
         imageMode(CORNER)
+        tint(255, 81.6); // Fimg4의 투명도 적용
+        image(Fimg4, 0, 0, width, height);
+        tint(255,255,255)
         // section2 로고
         this.section2Draw()
 
@@ -466,6 +470,7 @@ class ImageGeneratorApp {
                     imageMode(CENTER)
                     image(img, this.imgX, this.imgY, this.imgW, this.imgH);
                     this.generatedImageLoaded = true; // 이미지 로드 완료
+                    image(picframe,this.imgX, this.imgY, this.imgW, this.imgH)
 
 
                 });
@@ -475,6 +480,7 @@ class ImageGeneratorApp {
                 fill(255,111,111)
                 rectMode(CENTER) // 로딩 화면
                 rect(this.imgX, this.imgY, this.imgW, this.imgH)
+                image(picframe,this.imgX, this.imgY, this.imgW, this.imgH)
                 fill(0)
                 rectMode(CORNER)
 
@@ -501,6 +507,10 @@ class ImageGeneratorApp {
         this.generateButton.hide();
         background(255);
         background(255, 194, 180, 128);  // 배경색 설정
+        imageMode(CORNER)
+        tint(255, 81.6); // Fimg4의 투명도 적용
+        image(Fimg4, 0, 0, width, height);
+        tint(255,255,255)
         this.section2Draw()
         imageMode(CENTER);
         tint(255, 255, 255, 255);
@@ -629,6 +639,7 @@ class Case2Viewer {
 
             loadImage(imagePath, (img) => {
                 image(img, width / 2, height / 2, 400, 400); // 현재 이미지 표시
+                image(picframe, width / 2, height / 2, 400, 400)
             });
 
             // 현재 프롬프트 표시
@@ -650,6 +661,9 @@ class Case2Viewer {
         background(255)
         background(255, 194, 180, 128); // 배경색
         imageMode(CORNER)
+        tint(255, 81.6); // Fimg4의 투명도 적용
+        image(Fimg4, 0, 0, width, height);
+        tint(255,255,255)
         let scaleFactor1 = min(windowWidth, windowHeight) * 0.15 / max(section2.width, section2.height);
         let newWidth1 = section2.width * scaleFactor1;
         let newHeight1 = section2.height * scaleFactor1;
