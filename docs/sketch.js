@@ -898,10 +898,10 @@ let case2Viewer = null;
         }
       }
     }
-    
+
     function drawNarrationScreen() {
       if (selectedOption === -1) return;
-      
+  
       // vdes 이미지 렌더링
       let scaleFactor9 = min(windowWidth, windowHeight) * 0.7 / max(vdes.width, vdes.height);
       let newWidth9 = vdes.width * scaleFactor9;
@@ -918,28 +918,16 @@ let case2Viewer = null;
       let yPos10 = (windowHeight - newHeight10) / 2; // 세로 중앙
       image(vwave, xPos10, yPos10, newWidth10, newHeight10);
   
-      if (!currentSound && selectedOption >= 0 && selectedOption < narrationSounds.length) {
-          currentSound = narrationSounds[selectedOption];
-          currentSound.play();
-          narrationFinished = false;
-      }
-  
-      if (currentSound && !currentSound.isPlaying() && !narrationFinished) {
-          narrationFinished = true;
-      }
-  
-      if (narrationFinished) {
-          textSize(25);
-          text("음성 설명이 끝났습니다. 화살표를 눌러 다음 단계로 넘어가세요.", width / 2, height / 2 + 200);
-      }
-  
+      // 재생 버튼 위치 및 크기 설정
       let replayWidth = 240;
       let replayHeight = 80;
       let replayX = width / 2 - replayWidth / 2;
       let replayY = height / 2 + 250;
   
+      // 재생 버튼 이미지 렌더링
       image(replayImg, replayX, replayY, replayWidth, replayHeight);
   
+      // 버튼에 마우스가 올라가면 강조 효과
       if (
           mouseX > replayX && mouseX < replayX + replayWidth &&
           mouseY > replayY && mouseY < replayY + replayHeight
@@ -950,6 +938,36 @@ let case2Viewer = null;
           noFill();
           rect(replayX, replayY, replayWidth, replayHeight);
           pop();
+      }
+  
+      // 나레이션이 종료되었는지 확인
+      if (currentSound && !currentSound.isPlaying() && !narrationFinished) {
+          narrationFinished = true;
+      }
+  
+      // 나레이션 종료 메시지
+      if (narrationFinished) {
+          textSize(25);
+          textAlign(CENTER);
+          text("음성 설명이 끝났습니다. 화살표를 눌러 다음 단계로 넘어가세요.", width / 2, height / 2 + 200);
+      }
+  
+      // 클릭 이벤트 처리
+      if (mouseIsPressed) {
+          if (
+              mouseX > replayX && mouseX < replayX + replayWidth &&
+              mouseY > replayY && mouseY < replayY + replayHeight
+          ) {
+              // 나레이션 재생
+              if (!currentSound || !currentSound.isPlaying()) {
+                  if (currentSound) currentSound.stop(); // 이전 사운드 정지
+                  if (selectedOption >= 0 && selectedOption < narrationSounds.length) {
+                      currentSound = narrationSounds[selectedOption];
+                      currentSound.play();
+                      narrationFinished = false;
+                  }
+              }
+          }
       }
   }
   
