@@ -49,6 +49,11 @@ let resetImgHeight = 50;
 let arrowImg, resetImg, nextImg, customFont;
 let backgroundImg, section1Img, replayImg; // 배경 및 버튼 이미지
 
+//더 알아보기 부분
+let more, eye, pro, newImage1, newImage2, link;  // 이미지를 저장할 변수 선언
+let isInfo1 = false;  // info1 화면 여부를 확인하는 변수
+let isHoveringPrevious2 = false;  // previous2 이미지 위에 마우스가 있는지 확인하는 변수
+let isHoveringLink = false;  // link 이미지 위에 마우스가 있는지 확인하는 변수
 
 // Proxy URL 선언
 const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; // 공개 프록시 URL
@@ -82,6 +87,15 @@ function preload() {
     previous2 = loadImage('section2/previous2.svg');  // 다섯 번째 이미지 로드 (앞으로 가기))
     picframe = loadImage('asset/blank.svg');  // 아홉 번째 이미지 로드 (필요 없을 듯)
 
+    more = loadImage('assets/morebutton.svg');  // first image (more 버튼)
+    reset2 = loadImage('assets/reset2.svg');  // 두 번째 이미지 로드
+    framebox = loadImage('assets/diec.svg');  // 세 번째 이미지 로드
+    previous2 = loadImage('assets/previous2.svg');  // 네 번째 이미지 로드
+    eye = loadImage('assets/eye.svg');  // eye 이미지 로드
+    pro = loadImage('assets/pro.svg');  // pro 이미지 로드
+    newImage1 = loadImage('assets/definition.svg');  // 추가할 첫 번째 이미지
+    newImage2 = loadImage('assets/category.svg');  // 추가할 두 번째 이미지
+    link = loadImage('assets/link.svg');  // link 이미지 로드
 
 
 
@@ -276,6 +290,13 @@ if (stage === 0 || stage === 1 || stage === 2) {
                     hwan_selectingImage();
                     break;
             }
+        }
+        break;
+      case 12:
+        if (isInfo1) {
+          drawInfo1Screen();  // info1 화면 그리기
+        } else {
+          drawLastScreen();  // 메인 화면 그리기
         }
         break;
       default:
@@ -710,8 +731,10 @@ class Case2Viewer {
     drawArrowButton() {
       let arrowX = width - 150;
       let arrowY = height - 150;
+      imageMode(CORNER);
       image(arrowImg, arrowX, arrowY, 100, 100);
-      
+      imageMode(CENTER);
+
       if (mouseX > arrowX && mouseX < arrowX + 100 && mouseY > arrowY && mouseY < arrowY + 100) {
         push();
         stroke(255, 255, 255); // 흰색 외곽선
@@ -719,14 +742,6 @@ class Case2Viewer {
         noFill();
         rect(arrowX, arrowY, 100, 100); // 버튼 외곽선
         pop();
-      }
-      image(arrowImg, arrowX, arrowY, 100, 100);
-    }
-
-    handleArrowButton() {
-      if (mouseX > width - 150 && mouseX < width - 50 && mouseY > height - 150 && mouseY < height - 50) {
-        console.log("Arrow button clicked. Moving to next stage.");
-        stage++;
       }
     }
 }
@@ -1295,7 +1310,7 @@ let case2Viewer = null;
   }
   
   function mousePressed() {
-    if (stage >= 11 && yun_case === 1 && !app) {
+    if (stage == 11 && yun_case === 1 && !app) {
         // 이미지 선택 화면에서 클릭 처리
         if (dist(mouseX, mouseY, width / 4, height / 2) < 150) {
             l_selectedImage = l_Image1; // 첫 번째 이미지 선택
@@ -1317,14 +1332,68 @@ let case2Viewer = null;
             console.log(imageUrl);
         }
 
-    } else if (stage >= 11 &&  yun_case === 1 && app) {
+    } else if (stage == 11 &&  yun_case === 1 && app) {
         // 이미지 생성 후 클릭 이벤트 처리
         app.handleImageClick();
 
-    } else if (stage >= 11 &&  yun_case === 2 && case2Viewer) {
+    } else if (stage == 11 &&  yun_case === 2 && case2Viewer) {
         case2Viewer.handleArrowClick();
-        case2Viewer.handleArrowButton();
-    } 
+        if (mouseX > width - 150 && mouseX < width - 50 && mouseY > height - 150 && mouseY < height - 50) {
+          console.log("Arrow button clicked. Moving to next stage.");
+          stage = 12;
+        }
+
+    } else if (stage == 12) {
+      // more 이미지를 클릭하면 메인 화면으로 돌아가기
+      let scaleFactorMore = min(windowWidth, windowHeight) * 0.15 / max(more.width, more.height);
+      let newWidthMore = more.width * scaleFactorMore;
+      let newHeightMore = more.height * scaleFactorMore;
+      let xPosMore = windowWidth / 80;
+      let yPosMore = windowHeight / 80;
+      if (mouseX > xPosMore && mouseX < xPosMore + newWidthMore && mouseY > yPosMore && mouseY < yPosMore + newHeightMore) {
+        isInfo1 = false;  // 메인 화면으로 돌아가기
+      }
+
+      // previous2 이미지를 클릭하면 메인 화면으로 돌아가기
+      let scaleFactor5 = min(windowWidth, windowHeight) * 0.13 / max(previous2.width, previous2.height);
+      let newWidth5 = previous2.width * scaleFactor5;
+      let newHeight5 = previous2.height * scaleFactor5;
+      let xPos5 = windowWidth / 20;
+      let yPos5 = windowHeight * 8.5 / 10;
+      if (mouseX > xPos5 && mouseX < xPos5 + newWidth5 && mouseY > yPos5 && mouseY < yPos5 + newHeight5) {
+        isInfo1 = false;  // 메인 화면으로 돌아가기
+      }
+
+      // link 이미지 클릭 영역
+      let scaleFactorLink = min(windowWidth, windowHeight) * 0.4 / max(link.width, link.height);
+      let newWidthLink = link.width * scaleFactorLink;
+      let newHeightLink = link.height * scaleFactorLink;
+      let xPosLink = windowWidth - newWidthLink - 20;
+      let yPosLink = windowHeight - newHeightLink - 20;
+      if (mouseX > xPosLink && mouseX < xPosLink + newWidthLink && mouseY > yPosLink && mouseY < yPosLink + newHeightLink) {
+        window.open('http://www.kbuwel.or.kr/Blind/What', '_blank');  // URL 열기
+      }
+
+      // eye 이미지 클릭 영역
+      let scaleFactor6 = min(windowWidth, windowHeight) * 0.4 / max(eye.width, eye.height);
+      let newWidth6 = eye.width * scaleFactor6;
+      let newHeight6 = eye.height * scaleFactor6;
+      let xPos6 = windowWidth / 2 - (newWidth6 + 50);
+      let yPos6 = windowHeight * 3 / 4;
+      if (mouseX > xPos6 && mouseX < xPos6 + newWidth6 && mouseY > yPos6 && mouseY < yPos6 + newHeight6) {
+        isInfo1 = true;  // info1 화면으로 전환
+      }
+
+      // pro 이미지 클릭 영역
+      let scaleFactor7 = min(windowWidth, windowHeight) * 0.4 / max(pro.width, pro.height);
+      let newWidth7 = pro.width * scaleFactor7;
+      let newHeight7 = pro.height * scaleFactor7;
+      let xPos7 = windowWidth / 2 + 50;
+      let yPos7 = windowHeight * 3 / 4;
+      if (mouseX > xPos7 && mouseX < xPos7 + newWidth7 && mouseY > yPos7 && mouseY < yPos7 + newHeight7) {
+        // no action needed since info2 screen is removed
+      }
+    }
 
     if (
       stage !== 5 && stage !== 8 && stage !== 10 && // stage 5, 8, 10에서는 클릭 무효화
@@ -1380,7 +1449,7 @@ let case2Viewer = null;
     }
   
     // 지우 화면 클릭 처리
-    if (stage >= 4) {
+    if (stage >= 4 && stage < 11) {
       if (mouseX > width - 150 && mouseX < width - 50 && mouseY > height - 150 && mouseY < height - 50) {
         console.log("Arrow button clicked. Moving to next stage.");
         stage++;
@@ -1501,3 +1570,121 @@ if (stage === 6) {
     return;
   }
   }
+
+  //마무리 화면
+  function drawLastScreen() {
+    imageMode(CORNER);
+    background(255, 194, 180);  // 배경색 설정
+  
+    // more 버튼
+    let scaleFactor1 = min(windowWidth, windowHeight) * 0.15 / max(more.width, more.height);
+    let newWidth1 = more.width * scaleFactor1;
+    let newHeight1 = more.height * scaleFactor1;
+    image(more, windowWidth / 80, windowHeight / 80, newWidth1, newHeight1);
+  
+    // reset2
+    let scaleFactor2 = min(windowWidth, windowHeight) * 0.15 / max(reset2.width, reset2.height);
+    let newWidth2 = reset2.width * scaleFactor2;
+    let newHeight2 = reset2.height * scaleFactor2;
+    image(reset2, windowWidth * 9 / 10, windowHeight / 200, newWidth2, newHeight2);
+  
+    // framebox
+    let scaleFactor3 = min(windowWidth, windowHeight) * 1.1 / max(framebox.width, framebox.height);
+    let newWidth3 = framebox.width * scaleFactor3;
+    let newHeight3 = framebox.height * scaleFactor3;
+    let xPos3 = windowWidth / 2 - newWidth3 / 2;
+    let yPos3 = windowHeight / 7;
+    image(framebox, xPos3, yPos3, newWidth3, newHeight3);
+  
+    // eye (크기를 2배로 키우고, 세로 3/4 위치에 배치, 가운데 기준으로 왼쪽에 배치)
+    let scaleFactor6 = min(windowWidth, windowHeight) * 0.4 / max(eye.width, eye.height);  // 기존 크기보다 두 배로 키움
+    let newWidth6 = eye.width * scaleFactor6;
+    let newHeight6 = eye.height * scaleFactor6;
+    let xPos6 = windowWidth / 2 - (newWidth6 + 50);  // 간격을 50px로 넓힘
+    let yPos6 = windowHeight * 3 / 4;  // 세로 3/4 위치에 배치
+    image(eye, xPos6, yPos6, newWidth6, newHeight6);
+  }
+  
+  // info1 화면 그리기
+  function drawInfo1Screen() {
+    background(255, 194, 180);  // info1 화면 배경을 설정
+  
+    // previous2
+    let scaleFactor5 = min(windowWidth, windowHeight) * 0.13 / max(previous2.width, previous2.height);
+    let newWidth5 = previous2.width * scaleFactor5;
+    let newHeight5 = previous2.height * scaleFactor5;
+    let xPos5 = windowWidth / 20;
+    let yPos5 = windowHeight * 8.5 / 10;
+  
+    // 마우스가 previous2 위에 있을 경우 테두리 파란색
+    if (isHoveringPrevious2) {
+      stroke(255);  // 파란색 테두리
+      strokeWeight(3);
+      noFill();
+      rect(xPos5, yPos5, newWidth5, newHeight5);  // 테두리 그리기
+    }
+    noStroke();  // 테두리 초기화
+    image(previous2, xPos5, yPos5, newWidth5, newHeight5);
+  
+    // link 이미지 추가 (우하단에 배치, 마우스 호버 시 테두리 추가)
+    let scaleFactorLink = min(windowWidth, windowHeight) * 0.4 / max(link.width, link.height);  // 적당한 크기로 조정
+    let newWidthLink = link.width * scaleFactorLink;
+    let newHeightLink = link.height * scaleFactorLink;
+    let xPosLink = windowWidth - newWidthLink - 20;  // 우하단에 20px 여유를 두고 배치
+    let yPosLink = windowHeight - newHeightLink - 20;  // 우하단에 20px 여유를 두고 배치
+  
+    // 마우스가 link 위에 있을 경우 테두리 파란색
+    if (isHoveringLink) {
+      stroke(255);  // 파란색 테두리
+      strokeWeight(3);
+      noFill();
+      rect(xPosLink, yPosLink, newWidthLink, newHeightLink);  // 테두리 그리기
+    }
+    noStroke();  // 테두리 초기화
+    image(link, xPosLink, yPosLink, newWidthLink, newHeightLink);
+  
+    // 기존 이미지들
+    let scaleFactor1 = min(windowWidth, windowHeight) * 0.15 / max(more.width, more.height);
+    let newWidth1 = more.width * scaleFactor1;
+    let newHeight1 = more.height * scaleFactor1;
+    image(more, windowWidth / 80, windowHeight / 80, newWidth1, newHeight1);
+  
+    let scaleFactor2 = min(windowWidth, windowHeight) * 0.15 / max(reset2.width, reset2.height);
+    let newWidth2 = reset2.width * scaleFactor2;
+    let newHeight2 = reset2.height * scaleFactor2;
+    image(reset2, windowWidth * 9 / 10, windowHeight / 200, newWidth2, newHeight2);
+  
+    // 새로운 이미지들 추가 (category와 definition 이미지를 오른쪽으로 이동)
+    let scaleFactorNew1 = min(windowWidth, windowHeight) * 1.5 / max(newImage1.width, newImage1.height);
+    let newWidthNew1 = newImage1.width * scaleFactorNew1;
+    let newHeightNew1 = newImage1.height * scaleFactorNew1;
+    image(newImage1, windowWidth / 7.5, windowHeight * 0.4 / 15, newWidthNew1, newHeightNew1);  // xPos를 windowWidth / 3으로 변경
+  
+    let scaleFactorNew2 = min(windowWidth, windowHeight) * 1.5 / max(newImage2.width, newImage2.height);
+    let newWidthNew2 = newImage2.width * scaleFactorNew2;
+    let newHeightNew2 = newImage2.height * scaleFactorNew2;
+    image(newImage2, windowWidth / 7.5, windowHeight * 4.2 / 15, newWidthNew2, newHeightNew2);  // xPos를 windowWidth / 3으로 변경
+  }
+
+  // 마우스 이동 이벤트 처리
+function mouseMoved() {
+  let scaleFactor5 = min(windowWidth, windowHeight) * 0.13 / max(previous2.width, previous2.height);
+  let newWidth5 = previous2.width * scaleFactor5;
+  let newHeight5 = previous2.height * scaleFactor5;
+  let xPos5 = windowWidth / 20;
+  let yPos5 = windowHeight * 8.5 / 10;
+
+  // 마우스가 previous2 이미지 위에 있는지 확인
+  isHoveringPrevious2 =
+    mouseX > xPos5 && mouseX < xPos5 + newWidth5 && mouseY > yPos5 && mouseY < yPos5 + newHeight5;
+
+  // link 이미지 위에 있는지 확인
+  let scaleFactorLink = min(windowWidth, windowHeight) * 0.4 / max(link.width, link.height);
+  let newWidthLink = link.width * scaleFactorLink;
+  let newHeightLink = link.height * scaleFactorLink;
+  let xPosLink = windowWidth - newWidthLink - 20;
+  let yPosLink = windowHeight - newHeightLink - 20;
+
+  isHoveringLink =
+    mouseX > xPosLink && mouseX < xPosLink + newWidthLink && mouseY > yPosLink && mouseY < yPosLink + newHeightLink;
+}
