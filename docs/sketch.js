@@ -42,6 +42,7 @@ let narrationFinished = false; // 나레이션 종료 여부
 let quizStage = "quizscreen"; // 퀴즈 단계
 let selectedQuizOption = -1;
 let correctAnswerImages = []; // 정답 이미지 배열
+let resetSection1Img; // "처음으로" 버튼에 사용할 이미지
 
 // 버튼 및 이미지 크기
 let resetImgWidth = 100;
@@ -120,6 +121,8 @@ function preload() {
   correctAnswerImages[0] = loadImage('assets/actual1.svg'); // 정답 이미지 1
   correctAnswerImages[1] = loadImage('assets/actual2.svg'); // 정답 이미지 2
   correctAnswerImages[2] = loadImage('assets/actual3.svg'); // 정답 이미지 3
+  // 새로운 "처음으로" 버튼 이미지 로드
+  resetSection1Img = loadImage("assets/section1.svg");
 
   // 지윤: 이미지 로드
   Fimg1 = loadImage('assets/house.svg');
@@ -1160,22 +1163,22 @@ function drawFinalScreen() {
 
   // "처음으로" 버튼
   let resetButtonX = width / 2 - buttonWidth - buttonGap / 2; // X 위치 (왼쪽으로 이동)
-  image(resetImg, resetButtonX, buttonY, buttonWidth, buttonHeight);
+  image(resetSection1Img, resetButtonX, buttonY, buttonWidth, buttonHeight); // 새로운 이미지 사용
 
   // "처음으로" 버튼 강조 효과
   if (isMouseOver(resetButtonX, buttonY, buttonWidth, buttonHeight)) {
-      push();
-      stroke(255); // 흰색 강조
-      strokeWeight(3);
-      noFill();
-      rect(resetButtonX, buttonY, buttonWidth, buttonHeight);
-      pop();
+    push();
+    stroke(255); // 흰색 강조
+    strokeWeight(3);
+    noFill();
+    rect(resetButtonX, buttonY, buttonWidth, buttonHeight);
+    pop();
   }
 
   // "처음으로" 버튼 텍스트
   push();
   textSize(30);
-  text("다시 1전시관으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
+  text("처음으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
   pop();
 
   // "다음 전시로" 버튼
@@ -1184,12 +1187,12 @@ function drawFinalScreen() {
 
   // "다음 전시로" 버튼 강조 효과
   if (isMouseOver(nextButtonX, buttonY, buttonWidth, buttonHeight)) {
-      push();
-      stroke(255); // 흰색 강조
-      strokeWeight(3);
-      noFill();
-      rect(nextButtonX, buttonY, buttonWidth, buttonHeight);
-      pop();
+    push();
+    stroke(255); // 흰색 강조
+    strokeWeight(3);
+    noFill();
+    rect(nextButtonX, buttonY, buttonWidth, buttonHeight);
+    pop();
   }
 
   // "다음 전시로" 버튼 텍스트
