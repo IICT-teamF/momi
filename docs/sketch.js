@@ -122,7 +122,7 @@ function preload() {
   correctAnswerImages[1] = loadImage('assets/actual2.svg'); // 정답 이미지 2
   correctAnswerImages[2] = loadImage('assets/actual3.svg'); // 정답 이미지 3
   // 새로운 "처음으로" 버튼 이미지 로드
-  resetSection1Img = loadImage("assets/section1.svg");
+  resetSection1Img = loadImage("assets/Fsection1.svg");
 
   // 지윤: 이미지 로드
   Fimg1 = loadImage('assets/house.svg');
