@@ -1144,58 +1144,62 @@ let case2Viewer = null;
     }
 }
 
+function drawFinalScreen() {
+  textAlign(CENTER, CENTER); // 텍스트 중앙 정렬
 
+  // 화면 상단 텍스트
+  textSize(40); // 텍스트 크기 크게 설정
+  text("이제 함께 미술관을 관람해보시겠습니까?", width / 2, height * 0.25);
 
-  function drawFinalScreen() {
-    textAlign(CENTER, CENTER); // 텍스트 중앙 정렬
-  
-    // 화면 상단 텍스트
-    textSize(40); // 텍스트 크기 크게 설정
-    text("이제 함께 미술관을 관람해보시겠습니까?", width / 2, height * 0.25);
-  
-    // 버튼 공통 크기와 위치
-    let buttonWidth = 150; // 버튼 너비
-    let buttonHeight = 70; // 버튼 높이
-    let buttonY = height * 0.4; // 버튼 Y 위치
-    let textYOffset = buttonHeight + 20; // 텍스트와 버튼 간 간격
-    let buttonGap = 180; // 버튼 간격 증가
-  
-    // "처음으로" 버튼
-    let resetButtonX = width / 2 - buttonWidth - buttonGap / 2; // X 위치 (왼쪽으로 이동)
-    image(resetImg, resetButtonX, buttonY, buttonWidth, buttonHeight);
-  
-    // "처음으로" 버튼 강조 효과
-    if (isMouseOver(resetButtonX, buttonY, buttonWidth, buttonHeight)) {
+  // 버튼 공통 크기와 위치
+  let buttonWidth = 150; // 버튼 너비
+  let buttonHeight = 70; // 버튼 높이
+  let buttonY = height * 0.4; // 버튼 Y 위치
+  let textYOffset = buttonHeight + 20; // 텍스트와 버튼 간 간격
+  let buttonGap = 180; // 버튼 간격 증가
+
+  // "처음으로" 버튼
+  let resetButtonX = width / 2 - buttonWidth - buttonGap / 2; // X 위치 (왼쪽으로 이동)
+  image(resetImg, resetButtonX, buttonY, buttonWidth, buttonHeight);
+
+  // "처음으로" 버튼 강조 효과
+  if (isMouseOver(resetButtonX, buttonY, buttonWidth, buttonHeight)) {
       push();
       stroke(255); // 흰색 강조
       strokeWeight(3);
       noFill();
       rect(resetButtonX, buttonY, buttonWidth, buttonHeight);
       pop();
-    }
-  f
-    // "처음으로" 버튼 텍스트
-    textSize(30);
-    text("다시 1전시관으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
-  
-    // "다음 전시로" 버튼
-    let nextButtonX = width / 2 + buttonGap / 2; // X 위치 (오른쪽으로 이동)
-    image(nextImg, nextButtonX, buttonY, buttonWidth, buttonHeight);
-  
-    // "다음 전시로" 버튼 강조 효과
-    if (isMouseOver(nextButtonX, buttonY, buttonWidth, buttonHeight)) {
+  }
+
+  // "처음으로" 버튼 텍스트
+  push();
+  textSize(30);
+  text("다시 1전시관으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
+  pop();
+
+  // "다음 전시로" 버튼
+  let nextButtonX = width / 2 + buttonGap / 2; // X 위치 (오른쪽으로 이동)
+  image(nextImg, nextButtonX, buttonY, buttonWidth, buttonHeight);
+
+  // "다음 전시로" 버튼 강조 효과
+  if (isMouseOver(nextButtonX, buttonY, buttonWidth, buttonHeight)) {
       push();
       stroke(255); // 흰색 강조
       strokeWeight(3);
       noFill();
       rect(nextButtonX, buttonY, buttonWidth, buttonHeight);
       pop();
-    }
-  
-    // "다음 전시로" 버튼 텍스트
-    textSize(30);
-    text("다음 전시로", nextButtonX + buttonWidth / 2, buttonY + textYOffset);
   }
+
+  // "다음 전시로" 버튼 텍스트
+  push();
+  textSize(30);
+  text("다음 전시로", nextButtonX + buttonWidth / 2, buttonY + textYOffset);
+  pop();
+}
+
+
   // 마우스 위치 확인 함수
   function isMouseOver(x, y, w, h) {
     return mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h;
