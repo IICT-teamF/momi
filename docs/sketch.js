@@ -1117,7 +1117,7 @@ let case2Viewer = null;
   
     // "처음으로" 버튼 텍스트
     textSize(30);
-    text("처음으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
+    text("다시 1전시관으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
   
     // "다음 전시로" 버튼
     let nextButtonX = width / 2 + buttonGap / 2; // X 위치 (오른쪽으로 이동)
@@ -1354,7 +1354,7 @@ let case2Viewer = null;
         ) {
           console.log("Reset button clicked. Restarting.");
           resetState(); // 상태 초기화
-          stage = 0; // 초기 화면으로 이동
+          stage = 4; // 초기 화면으로 이동
           return;
         }
   
