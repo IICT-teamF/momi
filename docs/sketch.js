@@ -28,6 +28,7 @@ let FintroImage, Fsection1ButtonImage; // 추가 이미지
 let FshowImages = false; // 이미지 표시 여부
 let vdes;
 let vwave;
+let korstars, clouds;
 
 // 지우
 let stage = 0; // 현재 단계
@@ -114,6 +115,10 @@ function preload() {
   pbox = loadImage('assets/purplebox.svg');  // 여덟 번째 이미지 로드
   vdes = loadImage('assets/voicedes.svg');  // 아홉 번째 이미지 로드
   vwave = loadImage('assets/voicewave.svg');  // 열 번째 이미지 로드
+
+   //새로운 이미지
+   korstars = loadImage('assets/korstars.svg');
+   clouds = loadImage('assets/clouds.svg');
 
 }
 
@@ -685,8 +690,34 @@ let case2Viewer = null;
 
   // 지윤 화면 처리 함수들
   function drawFirstScreen() {
-    let FscaleFactor = 0.8; // 이미지 크기 0.8배 축소
-  
+    
+  // 배경 사각형 (1번 사각형: purrect)
+  noStroke();
+  fill(79, 37, 137); // 색상 (밝은 보라색 예시)
+  rect(0, 0, windowWidth, windowHeight);
+
+  // 하단 사각형 (2번 사각형: pinkrect)
+  fill(255, 182, 193); // 색상 (밝은 핑크색 예시)
+  rect(0, windowHeight - windowHeight * 0.2, windowWidth, windowHeight * 0.2);
+
+  let FscaleFactor = 0.8; // 이미지 크기 0.8배 축소
+
+  // korstars 이미지 설정
+  let korstarsHeight = (windowHeight / 5) * 0.7 * FscaleFactor;
+  let korstarsWidth = korstars.width * (korstarsHeight / korstars.height);
+  let korstarsX = (windowWidth - korstarsWidth) / 2;
+  let korstarsY = Fimg3Y -95  ; // 원하는 위치 설정
+
+  // clouds 이미지 설정
+  let cloudsHeight = (windowHeight / 5) * 2* FscaleFactor;
+  let cloudsWidth = clouds.width * (cloudsHeight / clouds.height);
+  let cloudsX = (windowWidth - cloudsWidth) / 2;
+  let cloudsY = Fimg3Y-100; // 원하는 위치 설정
+
+  // 이미지 그리기
+  image(korstars, korstarsX, korstarsY, korstarsWidth, korstarsHeight);
+  image(clouds, cloudsX, cloudsY, cloudsWidth, cloudsHeight);
+
     let Fimg3Height = (windowHeight / 5) * 1.5 * FscaleFactor;
     let Fimg3Width = Fimg3.width * (Fimg3Height / Fimg3.height);
     let Fimg3X = (windowWidth - Fimg3Width) / 2;
@@ -720,8 +751,30 @@ let case2Viewer = null;
     }
   }
   
-  function drawMiddleScreen() {let FscaleFactor = 0.8; // 이미지 크기 0.8배 축소
+  function drawMiddleScreen() {
+    let FscaleFactor = 0.8; // 이미지 크기 0.8배 축소
   
+  // 배경 사각형 (1번 사각형: purrect)
+  noStroke();
+  fill(79, 37, 137); // 색상 (밝은 보라색 예시)
+  rect(0, 0, windowWidth, windowHeight);
+
+  // 하단 사각형 (2번 사각형: pinkrect)
+  fill(255, 182, 193); // 색상 (밝은 핑크색 예시)
+  rect(0, windowHeight - windowHeight * 0.2, windowWidth, windowHeight * 0.2);
+
+  // korstars 이미지 설정
+  let korstarsHeight = (windowHeight / 5) * 0.7 * FscaleFactor;
+  let korstarsWidth = korstars.width * (korstarsHeight / korstars.height);
+  let korstarsX = (windowWidth - korstarsWidth) / 2;
+  let korstarsY = Fimg3Y-95  ; // 원하는 위치 설정
+
+  // clouds 이미지 설정
+  let cloudsHeight = (windowHeight / 5) * 2* FscaleFactor;
+  let cloudsWidth = clouds.width * (cloudsHeight / clouds.height);
+  let cloudsX = (windowWidth - cloudsWidth) / 2;
+  let cloudsY = Fimg3Y-100; // 원하는 위치 설정
+
     let Fimg3Height = (windowHeight / 5) * 1.5 * FscaleFactor;
     let Fimg3Width = Fimg3.width * (Fimg3Height / Fimg3.height);
     let Fimg3X = (windowWidth - Fimg3Width) / 2;
@@ -753,11 +806,17 @@ let case2Viewer = null;
         }, 400); // 2초 후에 FshowImages를 true로 설정
       }, 300); // 0.3초 후에 불투명도 변경
     }
+
+    // 이미지 그리기
+  image(korstars, korstarsX, korstarsY, korstarsWidth, korstarsHeight);
+  image(clouds, cloudsX, cloudsY, cloudsWidth, cloudsHeight);
+  
   
     // 화면에 이미지 그리기
     image(Fimg3, Fimg3X, Fimg3Y, Fimg3Width, Fimg3Height);
     image(Fimg1, Fimg1X, Fimg1Y, Fimg1Width, Fimg1Height);
     image(Fimg2, Fimg2X, Fimg2Y, Fimg2Width, Fimg2Height);
+  
   }
   
   function drawSecondScreen() {
