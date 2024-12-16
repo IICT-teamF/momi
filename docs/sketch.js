@@ -98,6 +98,8 @@ function preload() {
     newImage2 = loadImage('assets/category.svg');  // 추가할 두 번째 이미지
     link = loadImage('assets/link.svg');  // link 이미지 로드
 
+    trine2 = loadImage('section2/trine2.svg'); //다른사람 그림 화살표
+    tripre2 = loadImage('section2/tripre2.svg');
 
 
     // 지우: 이미지 및 사운드 로드
@@ -661,33 +663,61 @@ class Case2Viewer {
     }
 
     displayCurrentImage() {
-        // 그림과 프롬프트 영역 초기화
-        this.clearContentArea();
-        imageMode(CENTER);
-
-        if (this.images.length > 0) {
-            const currentImage = this.images[this.currentIndex];
-            const imagePath = `https://fogmydcroufvihnwmvdv.supabase.co/storage/v1/object/public/test/${currentImage.file_path}`;
-
-            loadImage(imagePath, (img) => {
-                image(img, width / 2, height / 2, 400, 400); // 현재 이미지 표시
-                image(picframe, width / 2, height / 2, 400, 400)
-            });
-
-            // 현재 프롬프트 표시
-            fill(0);
-            textSize(20);
-            textAlign(CENTER);
-            text(currentImage.prompt, width / 2, height / 2 + 250);
-        } else {
-            fill(0);
-            textSize(20);
-            textAlign(CENTER);
-            text("No images found for this category.", width / 2, height / 2);
-        }
-        this.showArrows();
-        this.drawArrowButton();
+      // 그림과 프롬프트 영역 초기화
+      this.clearContentArea();
+      imageMode(CENTER);
+  
+      if (this.images.length > 0) {
+          const currentImage = this.images[this.currentIndex];
+          const imagePath = `https://fogmydcroufvihnwmvdv.supabase.co/storage/v1/object/public/test/${currentImage.file_path}`;
+  
+          loadImage(imagePath, (img) => {
+              image(img, width / 2, height/2-80, 400, 400); // 현재 이미지 표시
+              image(picframe, width / 2, height/2-80, 400, 400);
+          });
+  
+          // 현재 프롬프트 표시
+          fill(0);
+          textSize(20);
+          textAlign(CENTER, CENTER); // 텍스트 왼쪽 정렬
+  
+          // 텍스트 박스 크기 설정
+          const textBoxX = 200; // 좌측 여백
+          const textBoxY = height / 2 + 150; // 프롬프트 위치
+          const textBoxWidth = width - 400; // 화면 너비에서 좌우 200씩 여백
+          const textBoxHeight = 120; // 텍스트 박스 높이
+  
+          // 텍스트 그리기
+          const wrappedText = this.wrapText(currentImage.prompt, textBoxWidth);
+          text(wrappedText, textBoxX, textBoxY, textBoxWidth, textBoxHeight);
+      } else {
+          fill(0);
+          textSize(20);
+          textAlign(CENTER);
+          text("No images found for this category.", width / 2, height / 2);
+      }
+      this.showArrows();
+      this.drawArrowButton();
     }
+  
+    // 텍스트 줄바꿈 처리 함수
+    wrapText(text, boxWidth) {
+        let words = text.split(' ');
+        let lines = '';
+        let currentLine = '';
+    
+        for (let word of words) {
+            let testLine = currentLine + word + ' ';
+            if (textWidth(testLine) < boxWidth) {
+                currentLine = testLine;
+            } else {
+                lines += currentLine + '\n';
+                currentLine = word + ' ';
+            }
+        }
+        lines += currentLine; // 마지막 줄 추가
+        return lines;
+    }    
 
     clearContentArea() {
         // 그림과 프롬프트 영역 초기화
@@ -705,32 +735,42 @@ class Case2Viewer {
         noStroke();
         
         fill(255,194,180)
-        // 그림 영역 초기화
-        rect(width / 2 - 200, height / 2 - 200, 400, 400); 
         // 프롬프트 영역 초기화
-        rect(0, height / 2 + 200, width, 100); 
+        rect(150, height / 2 + 150, width-300, 120); 
     }
 
     showArrows() {
-        // 왼쪽 화살표
-        fill(0);
-        triangle(50, height / 2 - 20, 50, height / 2 + 20, 20, height / 2);
+      imageMode(CORNER);
+        // 왼쪽 화살표 
+        image(tripre2, 200, height / 2 - 80, 80, 80);
         // 오른쪽 화살표
-        triangle(width - 50, height / 2 - 20, width - 50, height / 2 + 20, width - 20, height / 2);
+        image(trine2, width - 200, height / 2 - 80, 80, 80);
+      imageMode(CENTER);
     }
 
     handleArrowClick() {
-        if (mouseX < 70 && mouseY > height / 2 - 20 && mouseY < height / 2 + 20) {
-            // 왼쪽 화살표 클릭
-            this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
-            this.displayCurrentImage();
-        } else if (mouseX > width - 70 && mouseY > height / 2 - 20 && mouseY < height / 2 + 20) {
-            // 오른쪽 화살표 클릭
-            this.currentIndex = (this.currentIndex + 1) % this.images.length;
-            this.displayCurrentImage();
-        }
-    }
-
+      // 왼쪽 화살표 클릭 영역
+      if (
+          mouseX > 200 && 
+          mouseX < 200 + 80 && 
+          mouseY > height / 2 - 80 && 
+          mouseY < height / 2
+      ) {
+          this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+          this.displayCurrentImage();
+      }
+      // 오른쪽 화살표 클릭 영역
+      else if (
+          mouseX > width - 200 && 
+          mouseX < width - 200 + 80 && 
+          mouseY > height / 2 - 80 && 
+          mouseY < height / 2
+      ) {
+          this.currentIndex = (this.currentIndex + 1) % this.images.length;
+          this.displayCurrentImage();
+      }
+  }
+  
     drawArrowButton() {
       let arrowX = width - 150;
       let arrowY = height - 150;
@@ -1267,26 +1307,7 @@ function drawFinalScreen() {
   }
   
   function resetState() {
-    selectedOption = -1; // 선택 옵션 초기화
-    narrationFinished = false; // 나레이션 상태 초기화
-    if (currentSound && currentSound.isPlaying()) {
-      currentSound.stop(); // 재생 중인 사운드 중지
-    }
-    currentSound = null; // 사운드 초기화
-  
-    // 지윤 화면 상태 초기화
-    FnextScreen = false;
-    FmiddleScreen = false;
-    FnextScreen2 = false;
-    FshowImages = false;
-  
-    // Fimg1, Fimg2, Fimg3 위치 초기화
-    Fimg3Y = windowHeight / 5.9;
-    Fimg1X = (windowWidth - Fimg1.width) / 2;
-    Fimg1Y = (windowHeight - Fimg1.height) / 2 + windowHeight / 10 + windowHeight / 20;
-  
-    // stage 초기화
-    stage = 0; // 초기 단계로 설정
+    location.reload();
   }
   
   function drawSection1Button() {
