@@ -143,7 +143,7 @@ function preload() {
   console.log("Images loaded: ", correctAnswerImages);
   // 새로운 "처음으로" 버튼 이미지 로드
   resetSection1Img = loadImage("assets/Fsection1.svg");
-  rectangle115 = loadImage('assets/Rectangle 115.svg');
+  rectangle115 = loadImage('assets/Rectangle115.svg');
   txt3 = loadImage('assets/txt3.svg');
   txt4 = loadImage('assets/txt4.svg');
   txt6 = loadImage('assets/txt6.svg');
