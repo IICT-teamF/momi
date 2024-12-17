@@ -1766,5 +1766,5 @@ if (stage === 6) {
     isHoveringEye =
       mouseX > xPos6 && mouseX < xPos6 + newWidth6 && mouseY > yPos6 && mouseY < yPos6 + newHeight6;
   }
-  
+
   
