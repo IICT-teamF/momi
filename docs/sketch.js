@@ -63,6 +63,7 @@ let isInfo1 = false;  // info1 화면 여부를 확인하는 변수
 let isHoveringPrevious2 = false;  // previous2 이미지 위에 마우스가 있는지 확인하는 변수
 let isHoveringLink = false;  // link 이미지 위에 마우스가 있는지 확인하는 변수
 let isHoveringEye = false;  // eye 이미지 위에 마우스가 있는지 확인하는 변수
+let isHoveringReset2 = false;  // reset2 이미지 위에 마우스가 있는지 확인하는 변수
 
 
 // Proxy URL 선언
@@ -142,7 +143,7 @@ function preload() {
   console.log("Images loaded: ", correctAnswerImages);
   // 새로운 "처음으로" 버튼 이미지 로드
   resetSection1Img = loadImage("assets/Fsection1.svg");
-  rectangle115 = loadImage('assets/rectangle 115.svg');
+  rectangle115 = loadImage('assets/Rectangle 115.svg');
   txt3 = loadImage('assets/txt3.svg');
   txt4 = loadImage('assets/txt4.svg');
   txt6 = loadImage('assets/txt6.svg');
@@ -1450,6 +1451,17 @@ function drawFinalScreen() {
     if (mouseX > xPos6 && mouseX < xPos6 + newWidth6 && mouseY > yPos6 && mouseY < yPos6 + newHeight6) {
       isInfo1 = true;  // info1 화면으로 전환
      }
+
+
+     let scaleFactor2 = min(windowWidth, windowHeight) * 0.15 / max(reset2.width, reset2.height);
+     let newWidth2 = reset2.width * scaleFactor2;
+     let newHeight2 = reset2.height * scaleFactor2;
+     let xPos2 = windowWidth / 2 - (newWidth2 + 120);
+     let yPos2 = windowHeight * 2.05 / 4;
+     if (mouseX > xPos2 && mouseX < xPos2 + newWidth2 && mouseY > yPos2 && mouseY < yPos2 + newHeight2) {
+         location.reload(); // 페이지 새로고침
+     }
+      
     }
 
     if (
@@ -1645,6 +1657,16 @@ if (stage === 6) {
       let newHeight2 = reset2.height * scaleFactor2;
       let xPos2 = windowWidth / 2 - (newWidth2 + 120);  // 간격을 50px로 넓힘
       let yPos2 = windowHeight * 2.05 / 4;  // 세로 3/4 위치에 배치
+
+      // 마우스가 reset2 이미지 위에 있을 때 stroke 색상 흰색으로 변경
+      if (isHoveringReset2) {
+        stroke(255);  // 흰색 테두리
+        strokeWeight(3);
+        noFill();
+        rect(xPos2, yPos2, newWidth2, newHeight2);  // 테두리 그리기
+      } else {
+        noStroke();  // 테두리 초기화
+      }
       imageMode(CORNER)
       image(reset2, xPos2, yPos2, newWidth2, newHeight2);
     
@@ -1765,6 +1787,17 @@ if (stage === 6) {
   
     isHoveringEye =
       mouseX > xPos6 && mouseX < xPos6 + newWidth6 && mouseY > yPos6 && mouseY < yPos6 + newHeight6;
+
+      let scaleFactor2 = min(windowWidth, windowHeight) * 0.15 / max(reset2.width, reset2.height);
+      let newWidth2 = reset2.width * scaleFactor2;
+      let newHeight2 = reset2.height * scaleFactor2;
+      let xPos2 = windowWidth / 2 - (newWidth2 + 120);
+      let yPos2 = windowHeight * 2.05 / 4;
+    
+      isHoveringReset2 =
+        mouseX > xPos2 && mouseX < xPos2 + newWidth2 && mouseY > yPos2 && mouseY < yPos2 + newHeight2;
+
+      
   }
 
   
