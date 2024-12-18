@@ -416,7 +416,7 @@ class ImageGeneratorApp {
 
         // 생성된 이미지의 위치와 크기
         
-        this.imgX = width / 2 + 400;
+        this.imgX = width / 2 + 300;
         this.imgY = height / 2;
         this.imgW = 400;
         this.imgH = 400;
@@ -445,22 +445,29 @@ class ImageGeneratorApp {
         
         tint(255, 255, 255, 255); // 투명도 100% 설정
         imageMode(CENTER);
-        image(chatting2, windowWidth / 2 + 350, windowHeight/ 2)
-        image(promp2, windowWidth / 2 + 350, windowHeight/ 2);  // 열한 번째 이미지 로드
+
+        image(chatting2, windowWidth / 2 + 300, windowHeight/ 2, chatting2.width * 0.9, chatting2.height * 0.9)
+        textSize(16)
+        text('*설명은 문장형으로 입력해주시면 좋아요', width/2+180 ,120)
         textSize(20)
-        text('설명은 문장형으로 입력해주세요.', width/2 ,80)
-        text('버튼을 클릭한 후에는 잠시 기다려주세요. 그림이 생성될 때까지는 약 10초 소요됩니다.',width/2,height-100)
+        text('버튼을 클릭한 후에는 잠시만 기다려주세요. 그림이 생성될 때까지는 약 10초 소요됩니다.',width/2,height-60)
     
 
         const numInputs = 3;
 
         for (let i = 0; i < numInputs; i++) {
 
-            const inputBox = createInput();
-            inputBox.position(windowWidth / 2 + 120, 250 + i * 200);
-            inputBox.class('box-style');
+            const inputBox = createElement('textarea');
+            inputBox.position(windowWidth / 2 + 45, 230 + i * 184);
+            inputBox.class('custom-input'); // 스타일 적용
             inputBox.size(500);
             inputBox.input(() => this.updateButtonState()); // 입력 이벤트 추가
+            inputBox.attribute('rows', 2); // 초기 행 수
+            inputBox.attribute('cols', 20); // 초기 열 수
+
+            inputBox.style('resize', 'none'); // 사용자가 크기 변경 못하게 설정
+            inputBox.style('overflow-wrap', 'break-word'); // 줄바꿈 강제
+            inputBox.style('white-space', 'pre-wrap'); // 텍스트 줄바꿈 유지
 
             this.inputAllBoxes.push(inputBox);
             if (i < 2) {
@@ -469,17 +476,12 @@ class ImageGeneratorApp {
         }
 
         // Generate Image 버튼
-        this.generateButton = createButton('내 설명으로 만든<br>작품 보기');
-        this.generateButton.position(windowWidth * 8 / 10 + 50, windowHeight * 8 / 9 - 20);
-        this.generateButton.class('box-style')
+        this.generateButton = createButton('작품 생성하기');
+        this.generateButton.position(windowWidth * 8 / 10 + 30, windowHeight -70);
+        this.generateButton.class('custom-button'); // 새로운 스타일 클래스 적용
 
         // 버튼 모양 초기 상태 - 비활성화
         this.generateButton.attribute('disabled', 'true'); // 'true'로 설정
-        this.generateButton.style('background-color', 'lightgray'); // 비활성화 배경색
-        this.generateButton.style('cursor', 'not-allowed'); // 비활성화 커서
-        this.generateButton.style('border', '2px solid black'); // 테두리 설정
-        this.generateButton.style('border-radius', '50px'); // 모서리 둥글게
-        this.generateButton.style('padding', '10px 20px'); // 버튼 크기 조정
         this.generateButton.mousePressed(() => this.generateImage());
 
         image(this.selectedImage, 400, height / 2, 400, 400);
@@ -492,11 +494,9 @@ class ImageGeneratorApp {
       const hasInput = this.inputBoxes.some((box) => box.value().trim() !== '');
       if (hasInput) {
           this.generateButton.removeAttribute('disabled'); // 버튼 활성화
-          this.generateButton.style('background-color', 'white'); // 활성화 배경색
           this.generateButton.style('cursor', 'pointer'); // 활성화 커서
       } else {
           this.generateButton.attribute('disabled', ''); // 버튼 비활성화
-          this.generateButton.style('background-color', 'lightgray'); // 비활성화 배경색
           this.generateButton.style('cursor', 'not-allowed'); // 비활성화 커서
       }
   }
@@ -697,7 +697,7 @@ class Case2Viewer {
       fill(0);
       textSize(20);
       textAlign(CENTER, CENTER);
-      text('다른 사람들의 설명과, 그를 바탕으로 이미지 생성형 AI DALLE가 제작한 그림을 감상해보세요.', width / 2, 100);
+      text('다른 사람들의 설명과, 그를 바탕으로 이미지 생성형 AI DALLE가 제작한 그림을 감상해보세요.', width / 2, 60);
 
       imageMode(CENTER);
   
@@ -770,7 +770,7 @@ class Case2Viewer {
         
         fill(255,194,180)
         // 프롬프트 영역 초기화
-        rect(150, height / 2 + 150, width-300, 120); 
+        rect(150, height / 2 + 150, width-300, 120, 50); 
     }
 
     showArrows() {
