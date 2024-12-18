@@ -449,17 +449,23 @@ class ImageGeneratorApp {
 
         image(chatting2, windowWidth / 2 + 300, windowHeight/ 2, chatting2.width * 0.9, chatting2.height * 0.9)
         textSize(16)
-        text('*설명은 문장형으로 입력해주시면 좋아요', width/2+180 ,120)
+        text('*설명은 문장형으로 입력해주시면 좋아요', width/2+180 ,100)
         textSize(20)
         text('버튼을 클릭한 후에는 잠시만 기다려주세요. 그림이 생성될 때까지는 약 10초 소요됩니다.',width/2,height-60)
     
 
         const numInputs = 3;
+        const centerY = windowHeight / 2; // 화면 세로 중앙값
+        const spacing = 184; // 입력창 사이의 간격 (조정 가능)
 
         for (let i = 0; i < numInputs; i++) {
-
             const inputBox = createElement('textarea');
-            inputBox.position(windowWidth / 2 + 45, 220 + i * 184);
+
+            // x 값은 그대로, y 값은 중심으로부터 위아래로 간격을 둠
+            const yOffset = (i - 1) * spacing; // 중앙을 기준으로 -1, 0, 1에 해당하는 위치
+            const yPos = centerY + yOffset; // 중앙값에 오프셋을 더함
+
+            inputBox.position(windowWidth / 2 + 45, yPos);
             inputBox.class('custom-input'); // 스타일 적용
             inputBox.size(500);
             inputBox.input(() => this.updateButtonState()); // 입력 이벤트 추가
@@ -472,9 +478,10 @@ class ImageGeneratorApp {
 
             this.inputAllBoxes.push(inputBox);
             if (i < 2) {
-              this.inputBoxes.push(inputBox);
-          }
+                this.inputBoxes.push(inputBox);
+            }
         }
+
 
         // Generate Image 버튼
         this.generateButton = createButton('작품 생성하기');
