@@ -544,6 +544,9 @@ class ImageGeneratorApp {
                 rect(this.imgX, this.imgY, this.imgW, this.imgH)
                 image(picframe,this.imgX, this.imgY, this.imgW, this.imgH)
                 fill(0)
+                textSize(20);
+                textAlign();
+                text('로딩 중...',this.imgX, this.imgY )
                 rectMode(CORNER)
 
                 // Supabase에 저장
