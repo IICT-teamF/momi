@@ -459,7 +459,7 @@ class ImageGeneratorApp {
         for (let i = 0; i < numInputs; i++) {
 
             const inputBox = createElement('textarea');
-            inputBox.position(windowWidth / 2 + 45, 230 + i * 184);
+            inputBox.position(windowWidth / 2 + 45, 220 + i * 184);
             inputBox.class('custom-input'); // 스타일 적용
             inputBox.size(500);
             inputBox.input(() => this.updateButtonState()); // 입력 이벤트 추가
@@ -478,7 +478,7 @@ class ImageGeneratorApp {
 
         // Generate Image 버튼
         this.generateButton = createButton('작품 생성하기');
-        this.generateButton.position(windowWidth * 8 / 10 + 30, windowHeight -70);
+        this.generateButton.position(windowWidth * 8 / 10 + 30, windowHeight -80);
         this.generateButton.class('custom-button'); // 새로운 스타일 클래스 적용
 
         // 버튼 모양 초기 상태 - 비활성화
