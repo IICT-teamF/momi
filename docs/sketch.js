@@ -538,7 +538,7 @@ class ImageGeneratorApp {
 
                 imageUrl = proxiedUrl;
                 this.hideInputsAndButton();
-                fill(255,111,111)
+                fill(255)
                 rectMode(CENTER) // 로딩 화면
                 rect(this.imgX, this.imgY, this.imgW, this.imgH)
                 image(picframe,this.imgX, this.imgY, this.imgW, this.imgH)
