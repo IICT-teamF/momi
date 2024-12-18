@@ -1256,7 +1256,7 @@ function drawFinalScreen() {
   push();
   fill(0);
   textSize(30);
-  text("처음으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
+  text("1전시관으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
   pop();
 
   // "다음 전시로" 버튼
