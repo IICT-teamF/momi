@@ -696,6 +696,13 @@ class Case2Viewer {
     displayCurrentImage() {
       // 그림과 프롬프트 영역 초기화
       this.clearContentArea();
+
+      // 화면 상단에 텍스트 추가
+      fill(0);
+      textSize(20);
+      textAlign(CENTER, CENTER);
+      text('다른 사람들의 설명과, 그를 바탕으로 이미지 생성형 AI DALLE가 제작한 그림을 감상해보세요.', width / 2, 100);
+
       imageMode(CENTER);
   
       if (this.images.length > 0) {
@@ -1260,7 +1267,7 @@ function drawFinalScreen() {
   push();
   fill(0);
   textSize(30);
-  text("처음으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
+  text("1전시관으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
   pop();
 
   // "다음 전시로" 버튼
