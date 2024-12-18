@@ -124,7 +124,7 @@ function preload() {
   arrowImg = loadImage("assets/next1.svg");
   resetImg = loadImage("assets/reset1.svg");
   nextImg = loadImage("assets/2ndbutton.svg");
-  customFont = loadFont("assets/BareunBatangM.ttf");
+  customFont = loadFont("assets/NotoSansKR-Regular.ttf");
   backgroundImg = loadImage("assets/background.png");
   section1Img = loadImage("assets/section1.svg");
   replayImg = loadImage("assets/replay.svg");
