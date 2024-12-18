@@ -448,7 +448,7 @@ class ImageGeneratorApp {
         image(chatting2, windowWidth / 2 + 350, windowHeight/ 2)
         image(promp2, windowWidth / 2 + 350, windowHeight/ 2);  // 열한 번째 이미지 로드
         textSize(20)
-        text('모든 설명을 입력하지 않아도 괜찮습니다. 설명은 문장형으로 입력해주세요.', width/2 ,80)
+        text('설명은 문장형으로 입력해주세요.', width/2 ,80)
         text('버튼을 클릭한 후에는 잠시 기다려주세요. 그림이 생성될 때까지는 약 10초 소요됩니다.',width/2,height-100)
     
 
