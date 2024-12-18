@@ -168,7 +168,7 @@ function preload() {
   gbox = loadImage('assets/greenbox.svg'); // 여섯 번째 이미지 로드
   bbox = loadImage('assets/bluebox.svg');  // 일곱 번째 이미지 로드
   pbox = loadImage('assets/purplebox.svg');  // 여덟 번째 이미지 로드
-  vdes = loadImage('assets/voicedes.svg');  // 아홉 번째 이미지 로드
+  vdes = loadImage('assets/txt5.svg');  // 아홉 번째 이미지 로드
   vwave = loadImage('assets/voicewave.svg');  // 열 번째 이미지 로드
 
    //새로운 이미지
@@ -974,8 +974,8 @@ let case2Viewer = null;
       // Fsection1ButtonImage 크기 조정
       let FsectionButtonWidth = Fsection1ButtonImage.width * 0.5; // 크기 50%로 조정
       let FsectionButtonHeight = Fsection1ButtonImage.height * 0.5;
-  
-      // Fsection1ButtonImage를 화면 가로 중앙, 세로 7/8 위치에 배치
+
+   // Fsection1ButtonImage를 화면 가로 중앙, 세로 7/8 위치에 배치
       let FsectionButtonX = (width - FsectionButtonWidth) / 2; // 가로 중앙 정렬
       let FsectionButtonY = height * 7 / 8 - FsectionButtonHeight / 2; // 세로 7/8 위치에 정렬
       image(Fsection1ButtonImage, FsectionButtonX, FsectionButtonY, FsectionButtonWidth, FsectionButtonHeight);
