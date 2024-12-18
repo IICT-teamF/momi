@@ -448,7 +448,7 @@ class ImageGeneratorApp {
         image(chatting2, windowWidth / 2 + 350, windowHeight/ 2)
         image(promp2, windowWidth / 2 + 350, windowHeight/ 2);  // 열한 번째 이미지 로드
         textSize(20)
-        text('모든 설명을 입력하지 않아도 괜찮습니다. 설명은 문장형으로 입력해주세요.', width/2 ,80)
+        text('설명은 문장형으로 입력해주세요.', width/2 ,80)
         text('버튼을 클릭한 후에는 잠시 기다려주세요. 그림이 생성될 때까지는 약 10초 소요됩니다.',width/2,height-100)
     
 
@@ -538,7 +538,7 @@ class ImageGeneratorApp {
 
                 imageUrl = proxiedUrl;
                 this.hideInputsAndButton();
-                fill(255,111,111)
+                fill(255)
                 rectMode(CENTER) // 로딩 화면
                 rect(this.imgX, this.imgY, this.imgW, this.imgH)
                 image(picframe,this.imgX, this.imgY, this.imgW, this.imgH)
@@ -692,6 +692,13 @@ class Case2Viewer {
     displayCurrentImage() {
       // 그림과 프롬프트 영역 초기화
       this.clearContentArea();
+
+      // 화면 상단에 텍스트 추가
+      fill(0);
+      textSize(20);
+      textAlign(CENTER, CENTER);
+      text('다른 사람들의 설명과, 그를 바탕으로 이미지 생성형 AI DALLE가 제작한 그림을 감상해보세요.', width / 2, 100);
+
       imageMode(CENTER);
   
       if (this.images.length > 0) {
