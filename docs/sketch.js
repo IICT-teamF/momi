@@ -400,6 +400,7 @@ function choi_image() {
     let newHeight1 = section2.height * scaleFactor1;
     image(section2, windowWidth / 80, windowHeight / 80, newWidth1, newHeight1);
     imageMode(CENTER)
+
 }
 
 class ImageGeneratorApp {
