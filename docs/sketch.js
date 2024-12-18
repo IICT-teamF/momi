@@ -400,6 +400,7 @@ function choi_image() {
     let newHeight1 = section2.height * scaleFactor1;
     image(section2, windowWidth / 80, windowHeight / 80, newWidth1, newHeight1);
     imageMode(CENTER)
+
 }
 
 class ImageGeneratorApp {
@@ -543,6 +544,9 @@ class ImageGeneratorApp {
                 rect(this.imgX, this.imgY, this.imgW, this.imgH)
                 image(picframe,this.imgX, this.imgY, this.imgW, this.imgH)
                 fill(0)
+                textSize(20);
+                textAlign();
+                text('로딩 중...',this.imgX, this.imgY )
                 rectMode(CORNER)
 
                 // Supabase에 저장
@@ -1263,7 +1267,7 @@ function drawFinalScreen() {
   push();
   fill(0);
   textSize(30);
-  text("처음으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
+  text("1전시관으로", resetButtonX + buttonWidth / 2, buttonY + textYOffset);
   pop();
 
   // "다음 전시로" 버튼
@@ -1728,22 +1732,7 @@ if (stage === 6) {
     imageMode(CORNER)
     image(previous2, xPos5, yPos5, newWidth5, newHeight5);
   
-    // link 이미지 추가 (우하단에 배치, 마우스 호버 시 테두리 추가)
-    let scaleFactorLink = min(windowWidth, windowHeight) * 0.25 / max(link.width, link.height);  // 적당한 크기로 조정
-    let newWidthLink = link.width * scaleFactorLink;
-    let newHeightLink = link.height * scaleFactorLink;
-    let xPosLink = windowWidth - newWidthLink - 20;  // 우하단에 20px 여유를 두고 배치
-    let yPosLink = windowHeight - newHeightLink - 43;  // 우하단에 20px 여유를 두고 배치
   
-    // 마우스가 link 위에 있을 경우 테두리 파란색
-    if (isHoveringLink) {
-      stroke(255);  // 파란색 테두리
-      strokeWeight(3);
-      noFill();
-      rect(xPosLink, yPosLink, newWidthLink, newHeightLink);  // 테두리 그리기
-    }
-    noStroke();  // 테두리 초기화
-    image(link, xPosLink, yPosLink, newWidthLink, newHeightLink);
   
     // 기존 이미지들
     let scaleFactor1 = min(windowWidth, windowHeight) * 0.15 / max(more.width, more.height);
@@ -1761,6 +1750,24 @@ if (stage === 6) {
     let newWidthNew2 = newImage2.width * scaleFactorNew2;
     let newHeightNew2 = newImage2.height * scaleFactorNew2;
     image(newImage2, windowWidth / 7.5, windowHeight * 4.2 / 15, newWidthNew2, newHeightNew2);  // xPos를 windowWidth / 3으로 변경
+
+
+      // link 이미지 추가 (우하단에 배치, 마우스 호버 시 테두리 추가)
+      let scaleFactorLink = min(windowWidth, windowHeight) * 0.25 / max(link.width, link.height);  // 적당한 크기로 조정
+      let newWidthLink = link.width * scaleFactorLink;
+      let newHeightLink = link.height * scaleFactorLink;
+      let xPosLink = windowWidth - newWidthLink - 20;  // 우하단에 20px 여유를 두고 배치
+      let yPosLink = windowHeight - newHeightLink - 43;  // 우하단에 20px 여유를 두고 배치
+    
+      // 마우스가 link 위에 있을 경우 테두리 파란색
+      if (isHoveringLink) {
+        stroke(255);  // 파란색 테두리
+        strokeWeight(3);
+        noFill();
+        rect(xPosLink, yPosLink, newWidthLink, newHeightLink);  // 테두리 그리기
+      }
+      noStroke();  // 테두리 초기화
+      image(link, xPosLink, yPosLink, newWidthLink, newHeightLink);
   }
 
   // 마우스 이동 이벤트 처리
